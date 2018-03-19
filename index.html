@@ -5,9 +5,39 @@
 	display:inline-block;
 	list-style-type: none;
 }
+#Team{
+	text-align: center;
+	font-weight: bold;
+
+}
+#list{
+	text-indent:20px;
+	font-weight: bold;
+}
 
 #member{
 	text-indent: 50px;
+
+}
+#Pphoto{
+	vertical-align: middle;
+	padding-top: 10px;
+
+}
+#Ddesc{
+	color: white;
+	margin-left:20px;
+	max-width: 300px;
+	padding-left:20px;	
+}
+
+
+#Wrapper{
+	margin-left: 100px;
+	background-color: black;
+	width: 350px;
+	height: 200px;
+	padding-bottom: 10px;
 }
 </style>
 <meta charset="UTF-8">
@@ -15,14 +45,30 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css"> <!--Taken From w3school-->
 
 	<nav id="nav" class="w3-bar w3-black">
-		<a href="#HomePage" class="w3-button w3-bar-item">Home</a>
-		<a href="#Projects" class= "w3-button w3-bar-item">Projects</a>
+		<a href="index.html" class="w3-button w3-bar-item">Home</a>
+		<a href="Projects.html" class= "w3-button w3-bar-item">Projects</a>
 	</nav>
 	<div>
-		<h1>[INSERT TEAM NAME HERE]</h1>
-		<h2><b>Team Members:</b></h2>
-		<h3 id="member">Jack Moore</h3>
-		<h3 id="member">Evan Frost</h3>
+		<h1 id="Team">JackFrost</h1>
+		<h2 id="list">Team Members:</h2>
+		<h3 id="member">Jack Moore:</h3>
+		<div id= "Wrapper">
+			<div id="Pphoto">
+				<img src="Jack.png" alt="Jack Moore" align="left" width="150" height="150" hspace="20">
+			</div>
+			<div id= Ddesc>
+			<p id="desc">Lead Artist of JackFrost, Is double majoring in Computer Science and Interactive Media and Game Design Art</p>
+			</div>
+		</div>
+		<h3 id="member">Evan Frost:</h3>
+		<div id="Wrapper">
+			<div id="Pphoto">
+				<img src="" alt="Evan Frost" align="left" width="150" height="150" hspace="20">
+			</div>
+			<div id="Ddesc">
+				<p id="desc">Lead Software Engineer of JackFrost, Is majoring in Interactive Media and Game Design Tech.</p>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
