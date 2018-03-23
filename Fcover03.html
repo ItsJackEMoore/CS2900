@@ -34,17 +34,24 @@ along with Perlenspiel. If not, see <http://www.gnu.org/licenses/>.
 	<link rel="shortcut icon" href="http://users.wpi.edu/~bmoriarty/ps/icons/favicon.png" />
 	<link rel="apple-touch-icon" href="http://users.wpi.edu/~bmoriarty/ps/icons/apple-touch-icon.png" />
 	<link rel="apple-touch-icon-precomposed" href="http://users.wpi.edu/~bmoriarty/ps/icons/apple-touch-icon.png" />
-	<link rel="stylesheet" type="text/css" href="http://users.wpi.edu/~bmoriarty/ps/ps3.2.css" />
-	<script type="text/javascript" src="http://users.wpi.edu/~bmoriarty/aq/aq1.0.js"></script>
-	<script type="text/javascript" src="http://users.wpi.edu/~bmoriarty/ps/ps3.2.js"></script>
+	<link rel="stylesheet" type="text/css" href="http://users.wpi.edu/~bmoriarty/ps/cover3.2.css" />
+	<script type="text/javascript" src="http://users.wpi.edu/~bmoriarty/ps/cover3.2.js"></script>
 </head>
-<body onload="PS._sys();">
-	<!--
-	The following optional mods to this file are permitted:
-	Change the "game.js" string in the <script> element below to specify a different game script.
-	You can also add additional <script> elements if needed. The .js files will be loaded in the order given.
-	Altering this file in any other way can result in breakage, and is a violation of The Rules.
-	-->
-	<script type="text/javascript" src="game.js"></script>
+<body onload="init( 0x303030, 0xFFFFFF );">
+	<div id="main">
+		<!--
+		IMPORTANT! Your cover.png file should be exactly 512 x 512 pixels for best quality
+		The following optional mods to this file are permitted:
+		Change the "Touch image to play" string in the <input> element below to alter the top line of text
+		Change the "game.html" string in the <a> element below to specify a different game file
+		Change the "cover.png" string in the <img> element below to specify a different cover image file
+		Change the "Game" string in the <img> element to match the name of your game
+		Change the FIRST parameter of the onload init() call to the RGB multiplex value of the desired background color
+		Change the SECOND parameter of the onload init() call to the RGB multiplex value of the desired status line color
+		Modding this file in any other way can result in breakage, and is a violation of The Rules.
+		-->
+		<input id="sts" type="text" readonly="readonly" value="Touch image to play" />
+		<a id="cvr" href="Fgame03.html"><img id="pic" src="Fcover03.png" alt="Game"></a>
+	</div>
 </body>
 </html>
