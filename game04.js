@@ -35,7 +35,7 @@ var timer ={
     touchedWall: false,
 
 	time:function(){
-		PS.debug(timer.count);
+
 		timer.count += 1;
 		if(ball.myM == 0 || ball.myM == 1){
 		    if(timer.count % 2 == 0){
@@ -362,7 +362,6 @@ var mousePos = {
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line to verify operation:
-	 PS.debug( "PS.init() called\n" );
 
 	 PS.gridSize( 11, 11);
 	 PS.gridColor( 0x4468a3 );
