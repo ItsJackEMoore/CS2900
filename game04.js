@@ -293,9 +293,8 @@ function redraw() {
             PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
             ball.myY = ball.myY - 1;
             ball.myX = ball.myX - 1;
-
+            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
             if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 ball.myM--;
                 playSound();
                 wallBall();
@@ -346,8 +345,7 @@ function redraw() {
                 }
             }
         }
-
-        else if (mousePos.mouseX >= ball.oldX - 4 && mousePos.myX < ball.oldX - 2) {
+        else if (mousePos.mouseX >= ball.oldX - 4 && mousePos.mouseX < ball.oldX - 2) {
 
             PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
             ball.myY = ball.myY - 1;
