@@ -88,7 +88,6 @@ function wallBall(){
 }
 
 function redraw() {
-    PS.statusText(ball.myM);
 
     if (ball.myM == 0 && ball.myY < 7) {
         knockback();
