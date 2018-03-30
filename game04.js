@@ -63,12 +63,12 @@ var level ={
 
 function knockback(){
     PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-    if(ball.myX == 0){
+    if(ball.myX == 0 && ball.myM == 0){
         ball.myX++;
         ball.hitWall = false;
         ball.hitCeiling = false;
     }
-    else if(ball.myX == 10) {
+    else if(ball.myX == 10 && ball.myM == 0) {
         ball.myX--;
         ball.hitWall = false;
         ball.hitCeiling = false;
@@ -80,10 +80,10 @@ function wallBall(){
     ball.oldY = ball.myY;
 
     if(ball.oldY == 0 || ball.oldY == 7){
-        ball.hitCeiling == true;
+        ball.hitCeiling = true;
     }
     else{
-        ball.hitWall == true;
+        ball.hitWall = true;
     }
 }
 
@@ -96,15 +96,59 @@ function redraw() {
         ball.myY = ball.myY + 1;
         PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
     }
+    else if(ball.hitCeiling == true){
+        if(mousePos.mouseX < ball.oldX){
+            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
+            ball.myY = ball.myY + 1;
+            ball.myX = ball.myX + 1;
+            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
+            if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
+                ball.myM--;
+                playSound();
+            }
+        }
+        else if(mousePos.mouseX > ball.oldX){
+            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
+            ball.myY = ball.myY + 1;
+            ball.myX = ball.myX - 1;
+            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
+            if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
+                ball.myM--;
+                playSound();
+            }
+        }
+        else if(ball.oldX == 5){
+            if(mousePos.mouseX > 5){
+                PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
+                ball.myY = ball.myY + 1;
+                ball.myX = ball.myX - 1;
+                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
+                if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
+                    ball.myM--;
+                    playSound();
+                }
+            }
+            else{
+                PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
+                ball.myY = ball.myY + 1;
+                ball.myX = ball.myX + 1;
+                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
+                if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
+                    ball.myM--;
+                    playSound();
+                }
+            }
+        }
+    }
     else if (ball.myM == 1) {
-        if (mousePos.mouseX <= ball.oldX + 2 && mousePos.mouseX > ball.oldX ||
-                ball.hitWall == true && ball.oldX  > 5) {
+        if (mousePos.mouseX <= ball.oldX + 2 && mousePos.mouseX > ball.oldX || ball.hitWall == true && ball.oldX  > 5) {
             PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
             ball.myY = ball.myY - 1;
             ball.myX = ball.myX - 1;
             PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
             if (ball.myX == 0 || ball.myY == 0) {
                 ball.myM--;
+                playSound();
             }
         }
         else if (mousePos.mouseX <= ball.oldX + 4 && mousePos.mouseX > ball.oldX + 2) {
@@ -115,14 +159,16 @@ function redraw() {
             ball.myY = ball.myY - 1;
             if (ball.myX == 0 || ball.myY == 0) {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--
+                ball.myM--;
+                playSound();
             }
             else {
                 ball.myX = ball.myX - 1;
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
 
                 if (ball.myX == 0 || ball.myY == 0) {
-                    ball.myM--
+                    ball.myM--;
+                    playSound();
                 }
 
             }
@@ -136,34 +182,37 @@ function redraw() {
             ball.myX = ball.myX - 1;
             if (ball.myX == 0 || ball.myY == 0) {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--
+                ball.myM--;
+                playSound();
             }
             else {
-                ball.myX--
+                ball.myX--;
                 if (ball.myX == 0 || ball.myY == 0) {
                     PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                    ball.myM--
+                    ball.myM--;
+                    playSound();
                 }
                 else {
-                    ball.myX--
+                    ball.myX--;
                     PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                     if (ball.myX == 0 || ball.myY == 0) {
                         PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                        ball.myM--
+                        ball.myM--;
+                        playSound();
                     }
                 }
             }
 
         }
-        else if (mousePos.mouseX >= ball.oldX - 2 && mousePos.mouseX < ball.oldX ||
-            ball.hitWall == true && ball.oldX < 5) {
+        else if (mousePos.mouseX >= ball.oldX - 2 && mousePos.mouseX < ball.oldX || ball.hitWall == true && ball.oldX < 5) {
 
             PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
             ball.myY = ball.myY - 1;
             ball.myX = ball.myX + 1;
             PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
             if (ball.myX == 10 || ball.myY == 10) {
-                ball.myM--
+                ball.myM--;
+                playSound();
             }
         }
         else if (mousePos.mouseX >= ball.oldX - 4 && mousePos.mouseX < ball.oldX - 2) {
@@ -175,13 +224,15 @@ function redraw() {
 
             if (ball.myX == 10 || ball.myY == 10) {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--
+                ball.myM--;
+                playSound();
             }
             else {
                 ball.myX = ball.myX + 1;
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 if (ball.myX == 10 || ball.myY == 10) {
-                    ball.myM--
+                    ball.myM--;
+                    playSound();
                 }
 
             }
@@ -194,6 +245,7 @@ function redraw() {
 
             if (ball.myX == 10 || ball.myY == 0) {
                 ball.myM--;
+                playSound();
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
             }
             else {
@@ -201,12 +253,14 @@ function redraw() {
                 if (ball.myX == 10 || ball.myY == 0) {
                     PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                     ball.myM--;
+                    playSound();
                 }
                 else {
                     ball.myX++;
                     PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                     if (ball.myX == 0) {
                         ball.myM--;
+                        playSound();
                     }
                 }
             }
@@ -221,6 +275,7 @@ function redraw() {
             if (ball.myX == 0 || ball.myY == 0) {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 ball.myM--;
+                playSound();
                 wallBall();
             }
             else {
@@ -228,6 +283,7 @@ function redraw() {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 if (ball.myY == 0) {
                     ball.myM--;
+                    playSound();
                     wallBall();
                 }
 
@@ -242,6 +298,7 @@ function redraw() {
             if (ball.myX == 0 || ball.myY == 0) {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 ball.myM--;
+                playSound();
                 wallBall();
             }
         }
@@ -254,6 +311,7 @@ function redraw() {
             if (ball.myX == 0 || ball.myY == 0) {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 ball.myM--;
+                playSound();
                 wallBall();
             }
             else {
@@ -262,6 +320,7 @@ function redraw() {
 
                 if (ball.myX == 0 || ball.myY == 0) {
                     ball.myM--;
+                    playSound();
                     wallBall();
                 }
 
@@ -275,6 +334,7 @@ function redraw() {
             if (ball.myX == 0 || ball.myY == 0) {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 ball.myM--;
+                playSound();
                 wallBall();
             }
             else {
@@ -282,6 +342,7 @@ function redraw() {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 if (ball.myY == 0) {
                     ball.myM--;
+                    playSound();
                     wallBall();
                 }
             }
@@ -295,6 +356,7 @@ function redraw() {
             PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
             if (ball.myX == 0 || ball.myY == 0) {
                 ball.myM--;
+                playSound();
                 wallBall();
             }
         }
@@ -307,6 +369,7 @@ function redraw() {
             if (ball.myX == 10 || ball.myY == 10) {
                 PS.color(ball.myX,ball.myY,PS.COLOR_BLACK);
                 ball.myM--;
+                playSound();
                 wallBall();
             }
             else {
@@ -314,6 +377,7 @@ function redraw() {
                 PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
                 if (ball.myX == 0 || ball.myY == 0) {
                     ball.myM--;
+                    playSound();
                     wallBall();
                 }
 
@@ -341,10 +405,40 @@ PS.init = function( system, options ) {
 	 PS.color(ball.myX,ball.myY,PS.COLOR_BLACK);
 	 PS.timerStart(5,timer.time);
 
+    PS.audioLoad( "fx_coin4", { lock: true } ); // load & lock click sound
+    PS.audioLoad( "fx_coin5", { lock: true } );
+    PS.audioLoad( "fx_coin6", { lock: true } );
+    PS.audioLoad( "fx_coin7", { lock: true } );
+    PS.audioLoad( "fx_coin8", { lock: true } );
 
-	// Add any other initialization code you need here.
+
+    // Add any other initialization code you need here.
 };
+function playSound(){
+    var coin = Math.floor(Math.random() * 5) + 1
 
+    if(coin == 1 )
+    {
+        PS.audioPlay("fx_coin4");
+    }
+    else if(coin == 2)
+    {
+        PS.audioPlay("fx_coin5");
+    }
+
+    else if(coin == 3)
+    {
+        PS.audioPlay("fx_coin6");
+    }
+    else if(coin == 4)
+    {
+        PS.audioPlay("fx_coin7");
+    }
+    else if(coin == 5)
+    {
+        PS.audioPlay("fx_coin8");
+    }
+}
 function changeMomentum(x,y){
     if(y < 7 && y > 7){
 
