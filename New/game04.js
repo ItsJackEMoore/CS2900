@@ -126,7 +126,7 @@ function movement(path){
     var i;
     ball.moving = true;
     for(i = 0; i < path.length; i++){
-        
+
         var array = path[i];
         var x = array[0];
         var y = array[1];
