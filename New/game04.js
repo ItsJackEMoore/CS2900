@@ -120,18 +120,13 @@ PS.release = function(x,y,data,opyions){
         movement(path);
         ball.touched = false;
     }
-
-
-
-
-
-
 };
 
 function movement(path){
     var i;
     ball.moving = true;
     for(i = 0; i < path.length; i++){
+        
         var array = path[i];
         var x = array[0];
         var y = array[1];
@@ -155,7 +150,6 @@ function movement(path){
         PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
         ball.x = x;
         ball.y = y;
-        timer.animation = false;
     }
     ball.moving = false;
 
