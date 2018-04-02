@@ -31,13 +31,13 @@ var ball = {
 };
 var timer ={
     count:1,
-    animation:false, //decides to animate the ball;
     time:function(){
         timer.count++;
         if(timer.count % 6 == 0 && ball.moving == false){
             if(ball.y < grid.y -1){
                 ball.y++;
                 PS.spriteMove(ball.image,ball.x,ball.y);
+                PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
 
             }
         }
@@ -152,10 +152,11 @@ function movement(path){
             }
         }
         PS.spriteMove(ball.image,x,y);
+        PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
         ball.x = x;
         ball.y = y;
+        timer.animation = false;
     }
     ball.moving = false;
-
 
 }
