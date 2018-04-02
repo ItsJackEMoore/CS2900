@@ -26,25 +26,38 @@ var ball = {
     image: null,
     x:5,
     y:7,
-    touched: false
+    touched: false,
+    moving:false
+};
+var timer ={
+    count:1,
+    animation:false, //decides to animate the ball;
+    time:function(){
+        timer.count++;
+        if(timer.count % 6 == 0 && ball.moving == false){
+            if(ball.y < grid.y -1){
+                ball.y++;
+                PS.spriteMove(ball.image,ball.x,ball.y);
+
+            }
+        }
+    }
 };
 
 var level ={
     level1: true,
     level2: false,
-    timeL: 90
-
 
 };
-
-function redraw(x1,y1,x2,y2){
-    PS.pathmap(ball.image,x1,y1,x2,y2);
-}
+var grid ={
+    x: 11,
+    y: 11
+};
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line to verify operation:
     PS.debug();
-	 PS.gridSize( 11, 11);
+	 PS.gridSize( grid.x, grid.y);
 	 PS.gridColor( 0x4468a3 );
 	 PS.borderColor(PS.ALL,PS.ALL,PS.COLOR_BLUE);
 
@@ -52,6 +65,7 @@ PS.init = function( system, options ) {
 
 	 ball.image = PS.spriteSolid(1,1);
 	 PS.spriteMove(ball.image,ball.x,ball.y);
+	 PS.timerStart(5,timer.time);
 
 
     PS.audioLoad( "fx_coin4", { lock: true } ); // load & lock click sound
@@ -99,11 +113,13 @@ PS.touch = function(x ,y,data,options){
 
 PS.release = function(x,y,data,opyions){
     var path = null;
-    if(ball.touched == true)
+    if(ball.touched == true) {
         var launchX = ball.x + (ball.x - x);
         var launchY = ball.y + (ball.y - y);
-        path = PS.line(ball.x,ball.y,launchX,launchY);
+        path = PS.line(ball.x, ball.y, launchX, launchY);
         movement(path);
+        ball.touched = false;
+    }
 
 
 
@@ -114,16 +130,32 @@ PS.release = function(x,y,data,opyions){
 
 function movement(path){
     var i;
+    ball.moving = true;
     for(i = 0; i < path.length; i++){
-        PS.statusText("worked");
         var array = path[i];
         var x = array[0];
         var y = array[1];
+        if(x > grid.x - 1 || x < 0){
+            if(x > ball.x){
+                x = ball.x - 1;
+            }
+            else{
+                x = ball.x +1;
+            }
+        }
+        if(y > grid.y - 1 || y < 0){
+            if(y > ball.y){
+                y = ball.y - 1;
+            }
+            else{
+                y = ball.y + 1;
+            }
+        }
         PS.spriteMove(ball.image,x,y);
         ball.x = x;
         ball.y = y;
-
     }
+    ball.moving = false;
 
 
 }
