@@ -88,20 +88,6 @@ function playSound(){
         PS.audioPlay("fx_coin8");
     }
 }
-function changeMomentum(x,y){
-    if(y < 7 && y > 7){
-
-    }
-    else if(y == 8){
-        ball.myM = 1;
-
-    }
-    else if(y >= 9){
-        ball.myM = 2;
-    }
-
-}
-
 PS.touch = function(x ,y,data,options){
 
     if(x == ball.x && y == ball.y){
@@ -112,10 +98,11 @@ PS.touch = function(x ,y,data,options){
 };
 
 PS.release = function(x,y,data,opyions){
+    var path = null;
     if(ball.touched == true)
         var launchX = ball.x + (ball.x - x);
         var launchY = ball.y + (ball.y - y);
-        var path = PS.line(ball.x,ball.y,launchX,launchY);
+        path = PS.line(ball.x,ball.y,launchX,launchY);
         movement(path);
 
 
@@ -132,8 +119,9 @@ function movement(path){
         var array = path[i];
         var x = array[0];
         var y = array[1];
-        PS.statusText(x + " " + y);
         PS.spriteMove(ball.image,x,y);
+        ball.x = x;
+        ball.y = y;
 
     }
 
