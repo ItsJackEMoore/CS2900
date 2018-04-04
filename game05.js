@@ -23,6 +23,10 @@ Called once after engine is initialized but before event-polling begins.
 
 // Uncomment the following BLOCK to expose PS.init() event handler:
 
+var grid ={
+    x: 11,
+    y: 11
+};
 var target ={
     x: null,
     y: null,
@@ -40,15 +44,40 @@ var ball = {
 };
 var timer ={
     timed: null,
+    xMove: null,
+    yMove: null,
     count:1,
     countDown:90,
+    animating: false,
     time:function(){
         timer.count++;
         timer.countDown--;
-        PS.statusText(timer.countDown);
+        //PS.statusText(timer.countDown);
         if(timer.countDown <= 0)
         {
             PS.timerStop(timer.timed);
+        }
+        if(timer.xMove !=null && timer.count % 1 == 0){
+            if(timer.xMove > grid.x - 1 || timer.xMove < 0){
+                if(timer.xMove > ball.x){
+                    timer.xMove = ball.x - 1;
+                }
+                else{
+                    timer.xMove = ball.x + 1;
+                }
+            }
+            if(timer.yMove > grid.y - 1 || timer.yMove < 0){
+                if(timer.yMove > ball.y){
+                    timer.yMove = ball.y - 1;
+                }
+                else{
+                    timer.yMove = ball.y + 1;
+                }
+            }
+            PS.spriteMove(ball.image,timer.xMove,timer.yMove);
+            timer.xMove = null;
+            timer.yMove = null;
+            timer.animating = false;
         }
         else if(timer.count % 6 == 0 && ball.moving == false){
 
@@ -67,10 +96,7 @@ var level ={
     level2: false,
 
 };
-var grid ={
-    x: 11,
-    y: 11
-};
+
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line to verify operation:
@@ -130,41 +156,38 @@ PS.release = function(x,y,data,opyions){
     if(ball.touched == true) {
         var launchX = ball.x + (ball.x - x);
         var launchY = ball.y + (ball.y - y);
-        path = PS.line(ball.x, ball.y, launchX, launchY);
+        path = PS.line(ball.x, ball.y, launchX, launchY); // path is the entire list of the x and y movement
         movement(path);
         ball.touched = false;
     }
 };
 
 function movement(path){
-    var i;
-    ball.moving = true;
-    for(i = 0; i < path.length; i++){
-
-        var array = path[i];
+    if(path.length > 0 && timer.animating == false) {
+        var array = path[0]; // array contains the movement of x and y of a single movement
         var x = array[0];
         var y = array[1];
-        if(x > grid.x - 1 || x < 0){
-            if(x > ball.x){
-                x = ball.x - 1;
-            }
-            else{
-                x = ball.x +1;
-            }
-        }
-        if(y > grid.y - 1 || y < 0){
-            if(y > ball.y){
-                y = ball.y - 1;
-            }
-            else{
-                y = ball.y + 1;
+        var i = 1;
+        animate(x, y);
+        if (path.size> 1) {
+            for (i; i < path.size; i++) ;
+            {
+                var newPath = path[i];
+                movement(newPath);
             }
         }
-        PS.spriteMove(ball.image,x,y);
-        PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
-        ball.x = x;
-        ball.y = y;
     }
-    ball.moving = false;
-
+    else if(timer.animating == true && path.size > 0){
+        movement(path);
+    }
+}
+function animate(x,y){
+    if(timer.animating == false){
+        timer.xMove = x;
+        timer.yMove = y;
+        timer.animating == true
+    }
+    else if(timer.animating == true){
+        animate(x,y);
+    }
 }
