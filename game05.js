@@ -22,6 +22,15 @@ Called once after engine is initialized but before event-polling begins.
 */
 
 // Uncomment the following BLOCK to expose PS.init() event handler:
+
+var target ={
+    x: null,
+    y: null,
+    isHit: false
+};
+
+var targetArray;
+
 var ball = {
     image: null,
     x:5,
@@ -30,10 +39,19 @@ var ball = {
     moving:false
 };
 var timer ={
+    timed: null,
     count:1,
+    countDown:90,
     time:function(){
         timer.count++;
-        if(timer.count % 6 == 0 && ball.moving == false){
+        timer.countDown--;
+        PS.statusText(timer.countDown);
+        if(timer.countDown <= 0)
+        {
+            PS.timerStop(timer.timed);
+        }
+        else if(timer.count % 6 == 0 && ball.moving == false){
+
             if(ball.y < grid.y -1){
                 ball.y++;
                 PS.spriteMove(ball.image,ball.x,ball.y);
@@ -56,16 +74,13 @@ var grid ={
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line to verify operation:
-    PS.debug();
 	 PS.gridSize( grid.x, grid.y);
 	 PS.gridColor( 0x4468a3 );
 	 PS.borderColor(PS.ALL,PS.ALL,PS.COLOR_BLUE);
 
-	 PS.statusText( "Ball" );
-
 	 ball.image = PS.spriteSolid(1,1);
 	 PS.spriteMove(ball.image,ball.x,ball.y);
-	 PS.timerStart(5,timer.time);
+	 timer.timed = PS.timerStart(5,timer.time);
 
 
     PS.audioLoad( "fx_coin4", { lock: true } ); // load & lock click sound
@@ -105,7 +120,6 @@ function playSound(){
 PS.touch = function(x ,y,data,options){
 
     if(x == ball.x && y == ball.y){
-        PS.statusText("Touched Ball");
         ball.touched = true;
     }
 
