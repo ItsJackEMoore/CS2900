@@ -30,6 +30,7 @@ var grid ={
 var target ={
     x: null,
     y: null,
+    image: null,
     isHit: false
 };
 
@@ -52,7 +53,7 @@ var timer ={
     time:function(){
         timer.count++;
         timer.countDown--;
-        //PS.statusText(timer.countDown);
+        PS.statusText(timer.countDown);
         if(timer.countDown <= 0)
         {
             PS.timerStop(timer.timed);
@@ -75,6 +76,9 @@ var timer ={
                 }
             }
             PS.spriteMove(ball.image,timer.xMove,timer.yMove);
+            PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+            ball.x = timer.xMove;
+            ball.y = timer.yMove;
             timer.xMove = null;
             timer.yMove = null;
             timer.animating = false;
@@ -162,23 +166,23 @@ PS.release = function(x,y,data,opyions){
     }
 };
 
-function movement(path){
-    if(path.length > 0 && timer.animating == false) {
-        var array = path[0]; // array contains the movement of x and y of a single movement
+function movement(a){
+    if(a.length > 0 && timer.animating == false) {
+        var array = a[0]; // array contains the movement of x and y of a single movement
         var x = array[0];
         var y = array[1];
         var i = 1;
         animate(x, y);
-        if (path.size> 1) {
-            for (i; i < path.size; i++) ;
+        if (a > 1) {
+            for (i; i < a.length; i++) ;
             {
-                var newPath = path[i];
+                var newPath = a[i];
                 movement(newPath);
             }
         }
     }
-    else if(timer.animating == true && path.size > 0){
-        movement(path);
+    else if(timer.animating == true && a > 0){
+        movement(a);
     }
 }
 function animate(x,y){
