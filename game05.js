@@ -22,7 +22,7 @@ Called once after engine is initialized but before event-polling begins.
 */
 
 // Uncomment the following BLOCK to expose PS.init() event handler:
-
+var path = new Array();
 var grid ={
     x: 11,
     y: 11
@@ -58,7 +58,7 @@ var timer ={
         {
             PS.timerStop(timer.timed);
         }
-        if(timer.xMove !=null && timer.count % 1 == 0){
+        if(timer.xMove != null && timer.count % 1 == 0){
             if(timer.xMove > grid.x - 1 || timer.xMove < 0){
                 if(timer.xMove > ball.x){
                     timer.xMove = ball.x - 1;
@@ -82,8 +82,11 @@ var timer ={
             timer.xMove = null;
             timer.yMove = null;
             timer.animating = false;
+            if(path.length != 0){
+                movement();
+            }
         }
-        else if(timer.count % 6 == 0 && ball.moving == false){
+        else if(timer.count % 6 == 0 && timer.animating == false){
 
             if(ball.y < grid.y -1){
                 ball.y++;
@@ -156,42 +159,26 @@ PS.touch = function(x ,y,data,options){
 };
 
 PS.release = function(x,y,data,opyions){
-    var path = null;
     if(ball.touched == true) {
         var launchX = ball.x + (ball.x - x);
         var launchY = ball.y + (ball.y - y);
         path = PS.line(ball.x, ball.y, launchX, launchY); // path is the entire list of the x and y movement
-        movement(path);
+        movement();
         ball.touched = false;
     }
 };
 
-function movement(a){
-    if(a.length > 0 && timer.animating == false) {
-        var array = a[0]; // array contains the movement of x and y of a single movement
-        var x = array[0];
-        var y = array[1];
-        var i = 1;
-        animate(x, y);
-        if (a > 1) {
-            for (i; i < a.length; i++) ;
-            {
-                var newPath = a[i];
-                movement(newPath);
-            }
+function movement() {
+    if (path.length != 0 && timer.animating == false) {
+        var array = path[0]; // array contains the movement of x and y of a single movement
+        timer.xMove = array[0];
+        timer.yMove = array[1];
+        if (path.length > 1) {
+            path.shift();
+
         }
-    }
-    else if(timer.animating == true && a > 0){
-        movement(a);
-    }
-}
-function animate(x,y){
-    if(timer.animating == false){
-        timer.xMove = x;
-        timer.yMove = y;
-        timer.animating == true
-    }
-    else if(timer.animating == true){
-        animate(x,y);
+        else{
+            path = [];
+        }
     }
 }
