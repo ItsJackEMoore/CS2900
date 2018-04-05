@@ -23,6 +23,7 @@ Called once after engine is initialized but before event-polling begins.
 
 // Uncomment the following BLOCK to expose PS.init() event handler:
 var path = new Array();
+
 var grid ={
     x: 11,
     y: 11
@@ -48,7 +49,7 @@ var timer ={
     xMove: null,
     yMove: null,
     count:1,
-    countDown:90,
+    countDown:190,
     animating: false,
     time:function(){
         timer.count++;
@@ -57,6 +58,7 @@ var timer ={
         if(timer.countDown <= 0)
         {
             PS.timerStop(timer.timed);
+            PS.statusText("Game Over");
         }
         if(timer.xMove != null && timer.count % 1 == 0){
             if(timer.xMove > grid.x - 1 || timer.xMove < 0){
