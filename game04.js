@@ -22,384 +22,85 @@ Called once after engine is initialized but before event-polling begins.
 */
 
 // Uncomment the following BLOCK to expose PS.init() event handler:
-var ball = {
-    myX: 5,
-    myY: 5,
-    myM: 0,
-    oldX: 5,
-    oldY: 5,
-    changeDir: false,
-    hitWall: false,
-    hitCeiling: false
+var path = new Array();
 
+var grid ={
+    x: 11,
+    y: 11
+};
+var ball = {
+    image: null,
+    x:5,
+    y:7,
+    touched: false,
+    moving:false
 };
 var timer ={
-	count : 0,
-    touchedWall: false,
-
-	time:function(){
-
-		timer.count += 1;
-		if(ball.myM == 0 || ball.myM == 1){
-		    if(timer.count % 2 == 0){
-		        redraw();
+    timed: null,
+    xMove: null,
+    yMove: null,
+    count:1,
+    countDown:190,
+    animating: false,
+    time:function(){
+        timer.count++;
+        if(timer.xMove != null && timer.count % 1 == 0){
+            if(timer.xMove > grid.x - 1 || timer.xMove < 0){
+                if(timer.xMove > ball.x){
+                    timer.xMove = ball.x - 1;
+                }
+                else{
+                    timer.xMove = ball.x + 1;
+                }
+            }
+            if(timer.yMove > grid.y - 1 || timer.yMove < 0){
+                if(timer.yMove > ball.y){
+                    timer.yMove = ball.y - 1;
+                }
+                else{
+                    timer.yMove = ball.y + 1;
+                }
+            }
+            PS.spriteMove(ball.image,timer.xMove,timer.yMove);
+            PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+            ball.x = timer.xMove;
+            ball.y = timer.yMove;
+            timer.xMove = null;
+            timer.yMove = null;
+            timer.animating = false;
+            if(path.length != 0){
+                movement();
             }
         }
-        else if(ball.myM == 2){
-		    if(timer.count % 1 == 0){
-		        redraw();
-            }
+        else if(timer.count % 6 == 0 && timer.animating == false){
 
+            if(ball.y < grid.y -1){
+                ball.y++;
+                PS.spriteMove(ball.image,ball.x,ball.y);
+                PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
+
+            }
         }
-	}
+    }
 };
+
 var level ={
     level1: true,
     level2: false,
-    timeL: 90
 
-
-};
-
-function knockback(){
-    PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-    if(ball.myX == 0 && ball.myM == 0){
-        ball.myX++;
-        ball.hitWall = false;
-        ball.hitCeiling = false;
-    }
-    else if(ball.myX == 10 && ball.myM == 0) {
-        ball.myX--;
-        ball.hitWall = false;
-        ball.hitCeiling = false;
-    }
-
-}
-function wallBall(){
-    ball.oldX = ball.myX;
-    ball.oldY = ball.myY;
-
-    if(ball.oldY == 0 || ball.oldY == 7){
-        ball.hitCeiling = true;
-    }
-    else{
-        ball.hitWall = true;
-    }
-}
-
-function redraw() {
-
-    if (ball.myM == 0 && ball.myY < 7) {
-        knockback();
-        PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-        ball.myY = ball.myY + 1;
-        PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-    }
-    else if(ball.hitCeiling == true){
-        if(mousePos.mouseX < ball.oldX){
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY + 1;
-            ball.myX = ball.myX + 1;
-            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-            if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
-                ball.myM--;
-                playSound();
-            }
-        }
-        else if(mousePos.mouseX > ball.oldX){
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY + 1;
-            ball.myX = ball.myX - 1;
-            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-            if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
-                ball.myM--;
-                playSound();
-            }
-        }
-        else if(ball.oldX == 5){
-            if(mousePos.mouseX > 5){
-                PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-                ball.myY = ball.myY + 1;
-                ball.myX = ball.myX - 1;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
-                    ball.myM--;
-                    playSound();
-                }
-            }
-            else{
-                PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-                ball.myY = ball.myY + 1;
-                ball.myX = ball.myX + 1;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                if (ball.myX == 0 || ball.myY == 7 || ball.myX ==10) {
-                    ball.myM--;
-                    playSound();
-                }
-            }
-        }
-    }
-    else if (ball.myM == 1) {
-        if (mousePos.mouseX <= ball.oldX + 2 && mousePos.mouseX > ball.oldX && ball.hitWall == false || ball.hitWall == true && ball.myX > 5) {
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX - 1;
-            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                ball.myM--;
-                playSound();
-            }
-        }
-        else if (mousePos.mouseX <= ball.oldX + 4 && mousePos.mouseX > ball.oldX + 2) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-
-            ball.myX = ball.myX - 1;
-            ball.myY = ball.myY - 1;
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--;
-                playSound();
-            }
-            else {
-                ball.myX = ball.myX - 1;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    ball.myM--;
-                    playSound();
-                }
-
-            }
-
-
-        }
-        else if (mousePos.mouseX == ball.oldX + 5) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX - 1;
-            if (ball.myX == 0 || ball.myY == 0) {
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--;
-                playSound();
-            }
-            else {
-                ball.myX--;
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                    ball.myM--;
-                    playSound();
-                }
-                else {
-                    ball.myX--;
-                    PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                    if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                        PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                        ball.myM--;
-                        playSound();
-                    }
-                }
-            }
-
-        }
-        else if (mousePos.mouseX >= ball.oldX - 2 && mousePos.mouseX < ball.oldX && ball.hitWall == false || ball.hitWall == true && ball.myX < 5) {
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX + 1;
-            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                ball.myM--;
-                playSound();
-            }
-        }
-        else if (mousePos.mouseX >= ball.oldX - 4 && mousePos.mouseX < ball.oldX - 2) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-
-            ball.myX = ball.myX + 1;
-            ball.myY = ball.myY - 1;
-
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--;
-                playSound();
-            }
-            else {
-                ball.myX = ball.myX + 1;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    ball.myM--;
-                    playSound();
-                }
-
-            }
-        }
-        else if (mousePos.mouseX == ball.oldX - 5) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX + 1;
-
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                ball.myM--;
-                playSound();
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-            }
-            else {
-                ball.myX++;
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                    ball.myM--;
-                    playSound();
-                }
-                else {
-                    ball.myX++;
-                    PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                    if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                        ball.myM--;
-                        playSound();
-                    }
-                }
-            }
-        }
-    }
-    else if (ball.myM == 2) {
-        if (mousePos.mouseX <= ball.oldX + 2 && mousePos.mouseX > ball.oldX) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX - 1;
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--;
-                playSound();
-                wallBall();
-            }
-            else {
-                ball.myY--;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    ball.myM--;
-                    playSound();
-                    wallBall();
-                }
-
-            }
-        }
-        else if (mousePos.mouseX <= ball.oldX + 4 && mousePos.mouseX > ball.oldX + 2) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX - 1;
-            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                ball.myM--;
-                playSound();
-                wallBall();
-            }
-        }
-        else if (mousePos.mouseX == ball.oldX + 5) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myX = ball.myX - 1;
-            ball.myY = ball.myY - 1;
-
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--;
-                playSound();
-                wallBall();
-            }
-            else {
-                ball.myX = ball.myX - 1;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    ball.myM--;
-                    playSound();
-                    wallBall();
-                }
-
-            }
-        }
-        else if (mousePos.mouseX >= ball.oldX - 2 && mousePos.mouseX < ball.oldX) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX + 1;
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                ball.myM--;
-                playSound();
-                wallBall();
-            }
-            else {
-                ball.myY--;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    ball.myM--;
-                    playSound();
-                    wallBall();
-                }
-            }
-        }
-        else if (mousePos.mouseX >= ball.oldX - 4 && mousePos.mouseX < ball.oldX - 2) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-            ball.myY = ball.myY - 1;
-            ball.myX = ball.myX + 1;
-            PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                ball.myM--;
-                playSound();
-                wallBall();
-            }
-        }
-        else if (mousePos.mouseX == ball.oldX - 5) {
-
-            PS.color(ball.myX, ball.myY, PS.COLOR_WHITE);
-
-            ball.myX = ball.myX + 1;
-            ball.myY = ball.myY - 1;
-            if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                PS.color(ball.myX,ball.myY,PS.COLOR_BLACK);
-                ball.myM--;
-                playSound();
-                wallBall();
-            }
-            else {
-                ball.myX = ball.myX + 1;
-                PS.color(ball.myX, ball.myY, PS.COLOR_BLACK);
-                if (ball.myX == 0 || ball.myY == 0 || ball.myX == 10 || ball.myY == 7) {
-                    ball.myM--;
-                    playSound();
-                    wallBall();
-                }
-
-            }
-        }
-    }
-}
-
-var mousePos = {
-    mouseX: 0,
-    mouseY: 0,
-    touched: false
 };
 
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line to verify operation:
-
-	 PS.gridSize( 11, 11);
+	 PS.gridSize( grid.x, grid.y);
 	 PS.gridColor( 0x4468a3 );
 	 PS.borderColor(PS.ALL,PS.ALL,PS.COLOR_BLUE);
 
-	 PS.statusText( "Ball" );
+	 ball.image = PS.spriteSolid(1,1);
+	 PS.spriteMove(ball.image,ball.x,ball.y);
+	 timer.timed = PS.timerStart(5,timer.time);
 
-	 PS.color(ball.myX,ball.myY,PS.COLOR_BLACK);
-	 PS.timerStart(5,timer.time);
 
     PS.audioLoad( "fx_coin4", { lock: true } ); // load & lock click sound
     PS.audioLoad( "fx_coin5", { lock: true } );
@@ -435,36 +136,35 @@ function playSound(){
         PS.audioPlay("fx_coin8");
     }
 }
-function changeMomentum(x,y){
-    if(y < 7 && y > 7){
-
-    }
-    else if(y == 8){
-        ball.myM = 1;
-
-    }
-    else if(y >= 9){
-        ball.myM = 2;
-    }
-
-}
-
 PS.touch = function(x ,y,data,options){
-    if(x == ball.myX && y == ball.myY)
-    {
-        mousePos.touched = true;
 
+    if(x == ball.x && y == ball.y){
+        ball.touched = true;
     }
 
-
 };
-PS.release = function(x,y,data,options){
-    if(mousePos.touched == true){
-        mousePos.mouseX = x;
-        mousePos.mouseY = y;
-        ball.oldX = ball.myX;
-        ball.oldY = ball.myY;
-        changeMomentum(mousePos.mouseX, mousePos.mouseY);
-        mousePos.touched = false;
+
+PS.release = function(x,y,data,opyions){
+    if(ball.touched == true) {
+        var launchX = ball.x + (ball.x - x);
+        var launchY = ball.y + (ball.y - y);
+        path = PS.line(ball.x, ball.y, launchX, launchY); // path is the entire list of the x and y movement
+        movement();
+        ball.touched = false;
     }
 };
+
+function movement() {
+    if (path.length != 0 && timer.animating == false) {
+        var array = path[0]; // array contains the movement of x and y of a single movement
+        timer.xMove = array[0];
+        timer.yMove = array[1];
+        if (path.length > 1) {
+            path.shift();
+
+        }
+        else{
+            path = [];
+        }
+    }
+}
