@@ -48,6 +48,7 @@ var timer ={
     countDown:290,
     animating: false,
     sound: false,
+    played: false,
     time:function(){
         timer.count++;
         timer.countDown--;
@@ -88,8 +89,9 @@ var timer ={
             timer.yMove = null;
             timer.animating = false;
             checkTargets();
-            if(timer.sound == true){
+            if(timer.sound == true && timer.played == false){
                 playSound();
+                timer.played = true;
 
             }
             if(path.length != 0){
@@ -104,6 +106,7 @@ var timer ={
                 PS.spriteMove(ball.image,ball.x,ball.y);
                 PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
                 checkTargets();
+                timer.played = false;
 
             }
         }

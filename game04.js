@@ -42,23 +42,29 @@ var timer ={
     count:1,
     countDown:190,
     animating: false,
+    sound: false;
+    played: false;
     time:function(){
         timer.count++;
         if(timer.xMove != null && timer.count % 1 == 0){
             if(timer.xMove > grid.x - 1 || timer.xMove < 0){
                 if(timer.xMove > ball.x){
                     timer.xMove = ball.x - 1;
+                    timer.sound = true;
                 }
                 else{
                     timer.xMove = ball.x + 1;
+                    timer.sound = true;
                 }
             }
             if(timer.yMove > grid.y - 1 || timer.yMove < 0){
                 if(timer.yMove > ball.y){
                     timer.yMove = ball.y - 1;
+                    timer.sound = true;
                 }
                 else{
                     timer.yMove = ball.y + 1;
+                    timer.sound = true;
                 }
             }
             PS.spriteMove(ball.image,timer.xMove,timer.yMove);
@@ -68,6 +74,11 @@ var timer ={
             timer.xMove = null;
             timer.yMove = null;
             timer.animating = false;
+            if(timer.sound == true && timer.played){
+                playSound();
+                timer.played = true;
+
+            }
             if(path.length != 0){
                 movement();
             }
@@ -78,6 +89,7 @@ var timer ={
                 ball.y++;
                 PS.spriteMove(ball.image,ball.x,ball.y);
                 PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
+                timer.played = false;
 
             }
         }
@@ -112,6 +124,7 @@ PS.init = function( system, options ) {
     // Add any other initialization code you need here.
 };
 function playSound(){
+    timer.sound = false;
     var coin = Math.floor(Math.random() * 5) + 1
 
     if(coin == 1 )
