@@ -38,15 +38,16 @@ var ball = {
     y:7,
     touched: false,
     moving:false,
-    sound: false
+
 };
 var timer ={
     timed: null,
     xMove: null,
     yMove: null,
     count:1,
-    countDown:190,
+    countDown:290,
     animating: false,
+    sound: false,
     time:function(){
         timer.count++;
         timer.countDown--;
@@ -61,6 +62,7 @@ var timer ={
                 if(timer.xMove > ball.x){
                     timer.xMove = ball.x - 1;
                     timer.sound = true;
+
                 }
                 else{
                     timer.xMove = ball.x + 1;
@@ -71,6 +73,7 @@ var timer ={
                 if(timer.yMove > ball.y){
                     timer.yMove = ball.y - 1;
                     timer.sound = true;
+
                 }
                 else{
                     timer.yMove = ball.y + 1;
@@ -84,13 +87,15 @@ var timer ={
             timer.xMove = null;
             timer.yMove = null;
             timer.animating = false;
+            checkTargets();
+            if(timer.sound == true){
+                playSound();
+
+            }
             if(path.length != 0){
                 movement();
             }
-            if(timer.sound == true){
-                playSound();
-                timer.sound = false;
-            }
+
         }
         else if(timer.count % 6 == 0 && timer.animating == false){
 
@@ -98,6 +103,7 @@ var timer ={
                 ball.y++;
                 PS.spriteMove(ball.image,ball.x,ball.y);
                 PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
+                checkTargets();
 
             }
         }
@@ -127,7 +133,7 @@ function createArray(){
 
 }
 function createTargets(){
-    for(var i = 0; targetArray.length ; i++){
+    for(var i = 0; i < targetArray.length ; i++){
         var array = targetArray[i];
         var x = array[0];
         var y = array[1];
@@ -158,6 +164,7 @@ PS.init = function( system, options ) {
 };
 
 function playSound(){
+    timer.sound = false;
     var coin = Math.floor(Math.random() * 5) + 1
 
     if(coin == 1 )
@@ -211,6 +218,20 @@ function movement() {
         }
         else{
             path = [];
+        }
+    }
+}
+function checkTargets(){
+    if(targetArray.length == 0){
+        PS.statusText("Complete!");
+        PS.timerStop(timer.timed);
+    }
+    else{
+        for(var i = 0 ; i < targetArray.length; i++){
+            var array = targetArray[i];
+            if(array[0] == ball.x && array[1] == ball.y){
+                targetArray.splice(i,1);
+            }
         }
     }
 }
