@@ -121,7 +121,6 @@ var level ={
 
 };
 function createArray(){
-    PS.debug();
     if(level.intL == 1){
         for(var i = 0; i < level.level1; i++){
             var x = Math.floor(Math.random() * 10);
