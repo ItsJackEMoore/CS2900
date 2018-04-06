@@ -28,21 +28,17 @@ var grid ={
     x: 11,
     y: 11
 };
-var target ={
-    x: null,
-    y: null,
-    image: null,
-    isHit: false
-};
 
-var targetArray;
+
+var targetArray = new Array();
 
 var ball = {
     image: null,
     x:5,
     y:7,
     touched: false,
-    moving:false
+    moving:false,
+    sound: false
 };
 var timer ={
     timed: null,
@@ -64,17 +60,21 @@ var timer ={
             if(timer.xMove > grid.x - 1 || timer.xMove < 0){
                 if(timer.xMove > ball.x){
                     timer.xMove = ball.x - 1;
+                    timer.sound = true;
                 }
                 else{
                     timer.xMove = ball.x + 1;
+                    timer.sound = true;
                 }
             }
             if(timer.yMove > grid.y - 1 || timer.yMove < 0){
                 if(timer.yMove > ball.y){
                     timer.yMove = ball.y - 1;
+                    timer.sound = true;
                 }
                 else{
                     timer.yMove = ball.y + 1;
+                    timer.sound = true;
                 }
             }
             PS.spriteMove(ball.image,timer.xMove,timer.yMove);
@@ -86,6 +86,10 @@ var timer ={
             timer.animating = false;
             if(path.length != 0){
                 movement();
+            }
+            if(timer.sound == true){
+                playSound();
+                timer.sound = false;
             }
         }
         else if(timer.count % 6 == 0 && timer.animating == false){
@@ -101,11 +105,35 @@ var timer ={
 };
 
 var level ={
-    level1: true,
-    level2: false,
+    intL: 1,
+    level1: 5,
+    level2: 7,
+    level3: 10
 
 };
+function createArray(){
+    PS.debug();
+    if(level.intL == 1){
+        for(var i = 0; i < level.level1; i++){
+            var x = Math.floor(Math.random() * 10);
+            var y = Math.floor(Math.random() * 7);
+            var array = [x,y];
+            targetArray.push(array);
 
+
+        }
+        createTargets()
+    }
+
+}
+function createTargets(){
+    for(var i = 0; targetArray.length ; i++){
+        var array = targetArray[i];
+        var x = array[0];
+        var y = array[1];
+        PS.color(x,y,PS.COLOR_RED);
+    }
+}
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line to verify operation:
@@ -116,6 +144,7 @@ PS.init = function( system, options ) {
 	 ball.image = PS.spriteSolid(1,1);
 	 PS.spriteMove(ball.image,ball.x,ball.y);
 	 timer.timed = PS.timerStart(5,timer.time);
+	 createArray();
 
 
     PS.audioLoad( "fx_coin4", { lock: true } ); // load & lock click sound
@@ -127,6 +156,7 @@ PS.init = function( system, options ) {
 
     // Add any other initialization code you need here.
 };
+
 function playSound(){
     var coin = Math.floor(Math.random() * 5) + 1
 
