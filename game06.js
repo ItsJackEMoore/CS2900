@@ -33,17 +33,31 @@ var grid ={
 var targetArray = new Array();
 
 var ball = {
+    moves: 0,
     image: null,
     x:5,
     y:7,
+    startX: 5,
+    startY:7,
     touched: false,
     moving:false,
 
 };
+function checkPlatforms(){
+    return false;
+
+}
+function fixMovement(){
+
+}
+
+
 var timer ={
     timed: null,
     xMove: null,
     yMove: null,
+    tutorial: false,
+    finish: false,
     count:1,
     firstLoad: true,
     firstClick: false,
@@ -56,7 +70,10 @@ var timer ={
             PS.statusText("Click and drag the black square");
             timer.firstLoad = false;
         }
-        if(timer.xMove != null && timer.count % 1 == 0){
+        if(checkPlatforms() == true){
+            fixMovement();
+        }
+        else if(timer.xMove != null && timer.count % 1 == 0){
             if(timer.xMove > grid.x - 1 || timer.xMove < 0){
                 if(timer.xMove > ball.x){
                     timer.xMove = ball.x - 1;
@@ -86,7 +103,6 @@ var timer ={
             timer.xMove = null;
             timer.yMove = null;
             timer.animating = false;
-            checkTargets();
             if(timer.sound == true && timer.played == false){
                 playSound();
                 timer.played = true;
@@ -99,12 +115,15 @@ var timer ={
         }
         else if(timer.count % 6 == 0 && timer.animating == false){
 
-            if(ball.y < grid.y -1){
+            if(checkPlatforms() == false && ball.y < grid.y -1){
                 ball.y++;
                 PS.spriteMove(ball.image,ball.x,ball.y);
                 PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
-                checkTargets();
                 timer.played = false;
+                if(level.intL > 0 && ball.moves == 0){
+                    PS.statusText("Click to try again");
+                    PS.timerStop(timer.timed);
+                }
 
             }
         }
@@ -112,7 +131,8 @@ var timer ={
 };
 
 var level ={
-    intL: 1,
+    movesLeft: 0,
+    intL: 0,
     level1: 5,
     level2: 7,
     level3: 10
@@ -150,7 +170,6 @@ PS.init = function( system, options ) {
 	 ball.image = PS.spriteSolid(1,1);
 	 PS.spriteMove(ball.image,ball.x,ball.y);
 	 timer.timed = PS.timerStart(5,timer.time);
-	 createArray();
 
 
     PS.audioLoad( "fx_coin4", { lock: true } ); // load & lock click sound
@@ -190,9 +209,20 @@ function playSound(){
     }
 }
 PS.touch = function(x ,y,data,options){
-    if(x == ball.x && y == ball.y && timer.firstClick == false){
+    if(timer.tutorial == true && level.intL == 0){
+        level.intL++;
+        createArray();
+        PS.spriteMove(ball.image,ball.startX, ball.startY);
+        PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+        ball.x = ball.startX;
+        ball.y = ball.startY;
+    }
+    if(ball.moves == 0){
+        //restart current level
+    }
+    if(x == ball.x && y == ball.y && timer.firstClick == false && timer.finish == false){
         PS.statusText("Stay in the grid and let go");
-        timer.firstClick == true;
+        timer.firstClick = true;
     }
 
     if(x == ball.x && y == ball.y){
@@ -208,6 +238,10 @@ PS.release = function(x,y,data,opyions){
         path = PS.line(ball.x, ball.y, launchX, launchY); // path is the entire list of the x and y movement
         movement();
         ball.touched = false;
+        if(timer.firstClick == true && timer.tutorial == false && timer.finish == false){
+            PS.statusText("Good Job!, Click to Continue");
+            timer.tutorial = true;
+        }
     }
 };
 
@@ -222,20 +256,6 @@ function movement() {
         }
         else{
             path = [];
-        }
-    }
-}
-function checkTargets(){
-    if(targetArray.length == 0){
-        PS.statusText("Complete!");
-        PS.timerStop(timer.timed);
-    }
-    else{
-        for(var i = 0 ; i < targetArray.length; i++){
-            var array = targetArray[i];
-            if(array[0] == ball.x && array[1] == ball.y){
-                targetArray.splice(i,1);
-            }
         }
     }
 }
