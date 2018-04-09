@@ -24,6 +24,12 @@ Called once after engine is initialized but before event-polling begins.
 // Uncomment the following BLOCK to expose PS.init() event handler:
 var path = new Array();
 
+var goal ={ //target for the ball to get too!
+    image: null,
+    x: null,
+    y: null
+}
+
 var grid ={
     x: 11,
     y: 11
@@ -31,6 +37,7 @@ var grid ={
 
 var platforms ={
     //worded numbers is what you assign PS.sprite
+    tutorial: false,
     one: null,
     xy1:[0,0], //array where 0 is X and Y is 1
     two: null,
@@ -42,7 +49,6 @@ var platforms ={
 };
 
 var ball = {
-    remove: false,
     isOnPlatform: false,
     moves: 1,
     image: null,
@@ -65,8 +71,13 @@ function fixMovement(){
     var y3 = platforms.xy3[0];
     var x4 = platforms.xy4[0];
     var y4 = platforms.xy4[1];
+
+    if(ball.x == goal.x && ball.y == goal.y){
+        level.intL++;
+        createLevel();
+    }
     //hitting the platforms below the y axis
-    if (x == ball.x && y == ball.y - 1 || x + 1 == ball.x  && y == ball.y - 1 || x + 2 == ball.x  && y == ball.y - 1 ||
+    else if (x == ball.x && y == ball.y - 1 || x + 1 == ball.x  && y == ball.y - 1 || x + 2 == ball.x  && y == ball.y - 1 ||
         x2 == ball.x && y2 == ball.y - 1 || x2 + 1 == ball.x  && y2 == ball.y - 1 || x2 + 2 == ball.x  && y2 == ball.y - 1 ||
         x3 == ball.x && y3 == ball.y - 1 || x3 + 1 == ball.x  && y3 == ball.y - 1 || x3 + 2 == ball.x  && y3 == ball.y - 1 ||
         x4 == ball.x && y4== ball.y - 1 || x4 + 1 == ball.x  && y4 == ball.y - 1 || x4 + 2 == ball.x  && y4 == ball.y - 1 ||
@@ -80,8 +91,14 @@ function fixMovement(){
         x2 == ball.x && y2 == ball.y + 1 || x2 + 1 == ball.x  && y2 == ball.y + 1 || x2 + 2 == ball.x  && y2 == ball.y + 1 ||
         x3 == ball.x && y3 == ball.y + 1 || x3 + 1 == ball.x  && y3 == ball.y + 1 || x3 + 2 == ball.x  && y3 == ball.y + 1 ||
         x4 == ball.x && y4 == ball.y + 1 || x4 + 1 == ball.x  && y4 == ball.y + 1 || x4 + 2 == ball.x  && y4 == ball.y + 1){
+        if(platforms.tutorial == false){
+            PS.statusText("Reach the gold");
+            platforms.tutorial = true;
+        }
+
         collide();
     }
+
     else if(ball.y < grid.y -1){
         ball.y++;
         PS.spriteMove(ball.image,ball.x,ball.y);
@@ -110,7 +127,7 @@ var timer ={
 
         timer.count++;
         if(level.intL > 1){
-            PS.statusText(ball.moves);
+            PS.statusText("Moves:"+ " " + ball.moves);
         }
         if(timer.firstLoad == true) {
             PS.statusText("Click and drag the black square");
@@ -134,15 +151,14 @@ var timer ={
                 timer.xMove = null;
                 timer.yMove = null;
                 timer.animating == false;
+                if(level.intL > 1){
+                    ball.moves --;
+                }
+
             }
 
         }
         else if(timer.count % 6 == 0 && timer.animating == false){
-
-            if(ball.remove == true){
-                ball.moves--;
-                ball.remove = false;
-            }
 
             if(ball.y < grid.y -1){
                 fixMovement();
@@ -209,6 +225,7 @@ function playSound(){
 }
 PS.touch = function(x ,y,data,options){
     if(timer.gameOver == true){
+        ball.moves = 1;
         createLevel();
         timer.timed = PS.timerStart(5,timer.time);
     }
@@ -243,7 +260,6 @@ PS.release = function(x,y,data,opyions){
 };
 
 function movement() {
-    ball.remove = true;
     timer.test = false;
     if (path.length != 0 && timer.animating == false) {
         var array = path[0]; // array contains the movement of x and y of a single movement
@@ -260,22 +276,39 @@ function movement() {
 }
 function createLevel(){
 
-    PS.spriteMove(ball.image,ball.startX, ball.startY);
-    PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
-    ball.x = ball.startX;
-    ball.y = ball.startY;
-
+    PS.color(PS.ALL,PS.ALL,PS.COLOR_WHITE);
     switch(level.intL){
         case 1:
+            PS.spriteMove(ball.image,ball.startX, ball.startY);
+            PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+            ball.x = ball.startX;
+            ball.y = ball.startY;
+
             PS.statusText("Land on the blue squares");
+
             platforms.one = PS.spriteSolid(3,1);
+            goal.image = PS.spriteSolid(1,1);
+
             platforms.xy1 = [8,4];
+            goal.x = 10;
+            goal.y = 3;
+
             PS.spriteSolidColor(platforms.one,0x11C4FF);
             PS.spriteMove(platforms.one,platforms.xy1[0],platforms.xy1[1]);
+            PS.spriteSolidColor(goal.image, 0xD3C200);
+
+            PS.spriteMove(goal.image,goal.x,goal.y);
             break;
         case 2:
+            ball.moves = 10;
+            PS.spriteMove(ball.image,ball.startX, ball.startY);
+            PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+            ball.x = ball.startX;
+            ball.y = ball.startY;
+            PS.statusText("Works");
             break;
         case 3:
+
             break;
         case 4:
             break;
