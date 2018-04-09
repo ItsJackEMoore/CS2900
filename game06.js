@@ -60,8 +60,8 @@ function fixMovement(){
     var x = platforms.xy1[0];
     var y = platforms.xy1[1];
     if (x == ball.x && y == ball.y - 1) {
-        PS.statusText("works");
-        ball.isOnPlatform = true;
+        collide();
+
     }
 }
 
@@ -93,7 +93,7 @@ var timer ={
         }
         else if(timer.xMove != null && timer.count % 1 == 0){
             fixMovement();
-            if(ball.isOnPlatform == true|| timer.xMove > grid.x - 1 || timer.xMove < 0 || timer.yMove > grid.y -1 ||
+            if(timer.xMove > grid.x - 1 || timer.xMove < 0 || timer.yMove > grid.y -1 ||
                 timer.yMove < 0) {
                 collide();
             }
@@ -120,7 +120,7 @@ var timer ={
                 ball.remove = false;
             }
 
-            if(isOnPlatform() == false && ball.y < grid.y -1){
+            if(ball.isOnPlatform == false && ball.y < grid.y -1){
                 ball.y++;
                 PS.spriteMove(ball.image,ball.x,ball.y);
                 PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
