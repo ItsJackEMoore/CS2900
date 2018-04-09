@@ -32,7 +32,7 @@ var grid ={
 var platforms ={
     //worded numbers is what you assign PS.sprite
     one: null,
-    xy1:null, //array where 0 is X and Y is 1
+    xy1:[0,0], //array where 0 is X and Y is 1
     two: null,
     xy2: null,
     three: null,
@@ -43,6 +43,7 @@ var platforms ={
 
 var ball = {
     remove: false,
+    isOnPlatform: false,
     moves: 1,
     image: null,
     x:5,
@@ -56,14 +57,12 @@ var ball = {
 
 function fixMovement(){
 
-    var array = [ball.x,ball.y];
-    if (array === platforms.xy1 || array == platforms.xy2 || array == platforms.xy3 || array == platforms.xy4) {
-        return true;
+    var x = platforms.xy1[0];
+    var y = platforms.xy1[1];
+    if (x == ball.x && y == ball.y - 1) {
+        PS.statusText("works");
+        ball.isOnPlatform = true;
     }
-    else{
-        return false;
-    }
-
 }
 
 var timer ={
@@ -93,22 +92,10 @@ var timer ={
             timer.firstLoad = false;
         }
         else if(timer.xMove != null && timer.count % 1 == 0){
-            if(fixMovement() == true || timer.xMove > grid.x - 1 || timer.xMove < 0 || timer.yMove > grid.y -1 ||
+            fixMovement();
+            if(ball.isOnPlatform == true|| timer.xMove > grid.x - 1 || timer.xMove < 0 || timer.yMove > grid.y -1 ||
                 timer.yMove < 0) {
-                var launchX = ball.x - (ball.x - timer.array[0]);
-                var launchY = ball.y + (ball.y - timer.array[1]);
-                if(launchX < 0){
-                    launchX = Math.abs(launchX);
-                }
-                if(launchX > grid.x)
-                {
-                    launchX = launchX -5;
-                }
-                path = PS.line(ball.x, ball.y,launchX, launchY);
-                timer.array = path[path.length - 1];
-                timer.test = true;
-                playSound();
-                movement();
+                collide();
             }
 
             else if(path.length != 0){
@@ -173,7 +160,6 @@ PS.init = function( system, options ) {
 
     // Add any other initialization code you need here.
 };
-
 function playSound(){
     timer.sound = false;
     var coin = Math.floor(Math.random() * 5) + 1
@@ -275,11 +261,21 @@ function createLevel(){
     }
 
 }
-function isOnPlatform(){
-    if(ball.y + 1 == platforms.xy1){
-        return true;
+function collide() {
+    ball.isOnPlatform = false;
+    var launchX = ball.x - (ball.x - timer.array[0]);
+    var launchY = ball.y + (ball.y - timer.array[1]);
+    if(launchX < 0){
+        launchX = Math.abs(launchX);
     }
-    else{
-        return false;
+    if(launchX > grid.x)
+    {
+        launchX = grid.x - 5;
     }
+    path = PS.line(ball.x, ball.y,launchX, launchY);
+    timer.array = path[path.length - 1];
+    timer.test = true;
+    playSound();
+    movement();
+
 }
