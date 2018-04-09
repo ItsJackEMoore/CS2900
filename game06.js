@@ -72,7 +72,7 @@ function fixMovement(){
     var x4 = platforms.xy4[0];
     var y4 = platforms.xy4[1];
 
-    if(ball.x == goal.x && ball.y == goal.y){
+    if(level.intL > 0 && timer.xMove == goal.x && timer.yMove == goal.y){
         level.intL++;
         createLevel();
     }
@@ -104,6 +104,9 @@ function fixMovement(){
         PS.spriteMove(ball.image,ball.x,ball.y);
         PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
         timer.played = false;
+    }
+    else{
+        collide();
     }
 }
 
@@ -137,7 +140,7 @@ var timer ={
             fixMovement();
             if(timer.xMove > grid.x - 1 || timer.xMove < 0 || timer.yMove > grid.y -1 ||
                 timer.yMove < 0) {
-                collide();
+                fixMovement();
             }
 
             else if(path.length != 0){
@@ -225,6 +228,7 @@ function playSound(){
 }
 PS.touch = function(x ,y,data,options){
     if(timer.gameOver == true){
+        timer.gameOver = false;
         ball.moves = 1;
         createLevel();
         timer.timed = PS.timerStart(5,timer.time);
