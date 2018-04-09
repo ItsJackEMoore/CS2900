@@ -34,11 +34,11 @@ var platforms ={
     one: null,
     xy1:[0,0], //array where 0 is X and Y is 1
     two: null,
-    xy2: null,
+    xy2: [0,0],
     three: null,
-    xy3: null,
+    xy3: [0,0],
     four:null,
-    xy4: null,
+    xy4: [0,0],
 };
 
 var ball = {
@@ -59,9 +59,34 @@ function fixMovement(){
 
     var x = platforms.xy1[0];
     var y = platforms.xy1[1];
-    if (x == ball.x && y == ball.y - 1) {
+    var x2 = platforms.xy2[0];
+    var y2 = platforms.xy2[0];
+    var x3 = platforms.xy3[1];
+    var y3 = platforms.xy3[0];
+    var x4 = platforms.xy4[0];
+    var y4 = platforms.xy4[1];
+    //hitting the platforms below the y axis
+    if (x == ball.x && y == ball.y - 1 || x + 1 == ball.x  && y == ball.y - 1 || x + 2 == ball.x  && y == ball.y - 1 ||
+        x2 == ball.x && y2 == ball.y - 1 || x2 + 1 == ball.x  && y2 == ball.y - 1 || x2 + 2 == ball.x  && y2 == ball.y - 1 ||
+        x3 == ball.x && y3 == ball.y - 1 || x3 + 1 == ball.x  && y3 == ball.y - 1 || x3 + 2 == ball.x  && y3 == ball.y - 1 ||
+        x4 == ball.x && y4== ball.y - 1 || x4 + 1 == ball.x  && y4 == ball.y - 1 || x4 + 2 == ball.x  && y4 == ball.y - 1 ||
+        //Hitting the platform when their y's are the same but from the side
+        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
+        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
+        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
+        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
+        //Hitting the platform when the balls y is higher
+        x == ball.x && y == ball.y + 1 || x + 1 == ball.x  && y == ball.y + 1 || x + 2 == ball.x  && y == ball.y + 1 ||
+        x2 == ball.x && y2 == ball.y + 1 || x2 + 1 == ball.x  && y2 == ball.y + 1 || x2 + 2 == ball.x  && y2 == ball.y + 1 ||
+        x3 == ball.x && y3 == ball.y + 1 || x3 + 1 == ball.x  && y3 == ball.y + 1 || x3 + 2 == ball.x  && y3 == ball.y + 1 ||
+        x4 == ball.x && y4 == ball.y + 1 || x4 + 1 == ball.x  && y4 == ball.y + 1 || x4 + 2 == ball.x  && y4 == ball.y + 1){
         collide();
-
+    }
+    else if(ball.y < grid.y -1){
+        ball.y++;
+        PS.spriteMove(ball.image,ball.x,ball.y);
+        PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
+        timer.played = false;
     }
 }
 
@@ -103,7 +128,6 @@ var timer ={
                 PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
                 ball.x = timer.xMove;
                 ball.y = timer.yMove;
-
                 movement();
             }
             else{
@@ -120,12 +144,9 @@ var timer ={
                 ball.remove = false;
             }
 
-            if(ball.isOnPlatform == false && ball.y < grid.y -1){
-                ball.y++;
-                PS.spriteMove(ball.image,ball.x,ball.y);
-                PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
-                timer.played = false;
-                }
+            if(ball.y < grid.y -1){
+                fixMovement();
+            }
             if(level.intL > 1 && ball.moves == 0){
                 PS.statusText("Click to try again");
                 PS.timerStop(timer.timed);
@@ -162,7 +183,7 @@ PS.init = function( system, options ) {
 };
 function playSound(){
     timer.sound = false;
-    var coin = Math.floor(Math.random() * 5) + 1
+    var coin = Math.floor(Math.random() * 5) + 1;
 
     if(coin == 1 )
     {
@@ -262,20 +283,25 @@ function createLevel(){
 
 }
 function collide() {
-    ball.isOnPlatform = false;
-    var launchX = ball.x - (ball.x - timer.array[0]);
-    var launchY = ball.y + (ball.y - timer.array[1]);
-    if(launchX < 0){
-        launchX = Math.abs(launchX);
+    if(path.length == []){
+
     }
-    if(launchX > grid.x)
-    {
-        launchX = grid.x - 5;
+    else{
+        var launchX = ball.x - (ball.x - timer.array[0]);
+        var launchY = ball.y + (ball.y - timer.array[1]);
+        if(launchX < 0){
+            launchX = Math.abs(launchX);
+        }
+        if(launchX > grid.x)
+        {
+            launchX = grid.x - 5;
+        }
+        path = PS.line(ball.x, ball.y,launchX, launchY);
+        timer.array = path[path.length - 1];
+        timer.test = true;
+        playSound();
+        movement();
     }
-    path = PS.line(ball.x, ball.y,launchX, launchY);
-    timer.array = path[path.length - 1];
-    timer.test = true;
-    playSound();
-    movement();
+
 
 }
