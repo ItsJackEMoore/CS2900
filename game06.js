@@ -29,30 +29,46 @@ var grid ={
     y: 11
 };
 
-
-var targetArray = new Array();
+var platforms ={
+    //worded numbers is what you assign PS.sprite
+    one: null,
+    xy1:null, //array where 0 is X and Y is 1
+    two: null,
+    xy2: null,
+    three: null,
+    xy3: null,
+    four:null,
+    xy4: null,
+};
 
 var ball = {
-    moves: 0,
+    remove: false,
+    moves: 1,
     image: null,
     x:5,
     y:7,
-    startX: 5,
+    startX: 4,
     startY:7,
     touched: false,
     moving:false,
 
 };
-function checkPlatforms(){
-    return false;
 
-}
 function fixMovement(){
 
+    var array = [ball.x,ball.y];
+    if (array === platforms.xy1 || array == platforms.xy2 || array == platforms.xy3 || array == platforms.xy4) {
+        return true;
+    }
+    else{
+        return false;
+    }
+
 }
 
-
 var timer ={
+    test: false,
+    gameOver: false,
     timed: null,
     xMove: null,
     yMove: null,
@@ -64,102 +80,78 @@ var timer ={
     animating: false,
     sound: false,
     played: false,
+    array : new Array(), // used when remaking the trajectory of the ball
     time:function(){
+
+
         timer.count++;
+        if(level.intL > 1){
+            PS.statusText(ball.moves);
+        }
         if(timer.firstLoad == true) {
             PS.statusText("Click and drag the black square");
             timer.firstLoad = false;
         }
-        if(checkPlatforms() == true){
-            fixMovement();
-        }
         else if(timer.xMove != null && timer.count % 1 == 0){
-            if(timer.xMove > grid.x - 1 || timer.xMove < 0){
-                if(timer.xMove > ball.x){
-                    timer.xMove = ball.x - 1;
-                    timer.sound = true;
-
+            if(fixMovement() == true || timer.xMove > grid.x - 1 || timer.xMove < 0 || timer.yMove > grid.y -1 ||
+                timer.yMove < 0) {
+                var launchX = ball.x - (ball.x - timer.array[0]);
+                var launchY = ball.y + (ball.y - timer.array[1]);
+                if(launchX < 0){
+                    launchX = Math.abs(launchX);
                 }
-                else{
-                    timer.xMove = ball.x + 1;
-                    timer.sound = true;
+                if(launchX > grid.x)
+                {
+                    launchX = launchX -5;
                 }
-            }
-            if(timer.yMove > grid.y - 1 || timer.yMove < 0){
-                if(timer.yMove > ball.y){
-                    timer.yMove = ball.y - 1;
-                    timer.sound = true;
-
-                }
-                else{
-                    timer.yMove = ball.y + 1;
-                    timer.sound = true;
-                }
-            }
-            PS.spriteMove(ball.image,timer.xMove,timer.yMove);
-            PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
-            ball.x = timer.xMove;
-            ball.y = timer.yMove;
-            timer.xMove = null;
-            timer.yMove = null;
-            timer.animating = false;
-            if(timer.sound == true && timer.played == false){
+                path = PS.line(ball.x, ball.y,launchX, launchY);
+                timer.array = path[path.length - 1];
+                timer.test = true;
                 playSound();
-                timer.played = true;
-
-            }
-            if(path.length != 0){
                 movement();
+            }
+
+            else if(path.length != 0){
+                PS.spriteMove(ball.image,timer.xMove,timer.yMove);
+                PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+                ball.x = timer.xMove;
+                ball.y = timer.yMove;
+
+                movement();
+            }
+            else{
+                timer.xMove = null;
+                timer.yMove = null;
+                timer.animating == false;
             }
 
         }
         else if(timer.count % 6 == 0 && timer.animating == false){
 
-            if(checkPlatforms() == false && ball.y < grid.y -1){
+            if(ball.remove == true){
+                ball.moves--;
+                ball.remove = false;
+            }
+
+            if(isOnPlatform() == false && ball.y < grid.y -1){
                 ball.y++;
                 PS.spriteMove(ball.image,ball.x,ball.y);
                 PS.alpha(ball.x,ball.y-1,PS.ALPHA_OPAQUE);
                 timer.played = false;
-                if(level.intL > 0 && ball.moves == 0){
-                    PS.statusText("Click to try again");
-                    PS.timerStop(timer.timed);
                 }
-
+            if(level.intL > 1 && ball.moves == 0){
+                PS.statusText("Click to try again");
+                PS.timerStop(timer.timed);
+                timer.gameOver = true;
             }
+
         }
     }
 };
 
 var level ={
-    movesLeft: 0,
     intL: 0,
-    level1: 5,
-    level2: 7,
-    level3: 10
-
 };
-function createArray(){
-    if(level.intL == 1){
-        for(var i = 0; i < level.level1; i++){
-            var x = Math.floor(Math.random() * 10);
-            var y = Math.floor(Math.random() * 7);
-            var array = [x,y];
-            targetArray.push(array);
-
-
-        }
-        createTargets()
-    }
-
-}
-function createTargets(){
-    for(var i = 0; i < targetArray.length ; i++){
-        var array = targetArray[i];
-        var x = array[0];
-        var y = array[1];
-        PS.color(x,y,PS.COLOR_RED);
-    }
-}
 
 PS.init = function( system, options ) {
 	// Uncomment the following code line to verify operation:
@@ -209,16 +201,13 @@ function playSound(){
     }
 }
 PS.touch = function(x ,y,data,options){
+    if(timer.gameOver == true){
+        createLevel();
+        timer.timed = PS.timerStart(5,timer.time);
+    }
     if(timer.tutorial == true && level.intL == 0){
         level.intL++;
-        createArray();
-        PS.spriteMove(ball.image,ball.startX, ball.startY);
-        PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
-        ball.x = ball.startX;
-        ball.y = ball.startY;
-    }
-    if(ball.moves == 0){
-        //restart current level
+        createLevel();
     }
     if(x == ball.x && y == ball.y && timer.firstClick == false && timer.finish == false){
         PS.statusText("Stay in the grid and let go");
@@ -236,6 +225,7 @@ PS.release = function(x,y,data,opyions){
         var launchX = ball.x + (ball.x - x);
         var launchY = ball.y + (ball.y - y);
         path = PS.line(ball.x, ball.y, launchX, launchY); // path is the entire list of the x and y movement
+        timer.array = path[path.length - 1];
         movement();
         ball.touched = false;
         if(timer.firstClick == true && timer.tutorial == false && timer.finish == false){
@@ -246,6 +236,8 @@ PS.release = function(x,y,data,opyions){
 };
 
 function movement() {
+    ball.remove = true;
+    timer.test = false;
     if (path.length != 0 && timer.animating == false) {
         var array = path[0]; // array contains the movement of x and y of a single movement
         timer.xMove = array[0];
@@ -257,5 +249,37 @@ function movement() {
         else{
             path = [];
         }
+    }
+}
+function createLevel(){
+
+    PS.spriteMove(ball.image,ball.startX, ball.startY);
+    PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+    ball.x = ball.startX;
+    ball.y = ball.startY;
+
+    switch(level.intL){
+        case 1:
+            PS.statusText("Land on the blue squares");
+            platforms.one = PS.spriteSolid(3,1);
+            platforms.xy1 = [8,4];
+            PS.spriteSolidColor(platforms.one,0x11C4FF);
+            PS.spriteMove(platforms.one,platforms.xy1[0],platforms.xy1[1]);
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+    }
+
+}
+function isOnPlatform(){
+    if(ball.y + 1 == platforms.xy1){
+        return true;
+    }
+    else{
+        return false;
     }
 }
