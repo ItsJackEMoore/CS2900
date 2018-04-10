@@ -42,8 +42,8 @@ var timer ={
     count:1,
     countDown:190,
     animating: false,
-    sound: false;
-    played: false;
+    sound: false,
+    played: false,
     time:function(){
         timer.count++;
         if(timer.xMove != null && timer.count % 1 == 0){
