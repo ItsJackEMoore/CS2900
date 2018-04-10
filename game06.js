@@ -328,7 +328,7 @@ function createLevel(){
             PS.spriteMove(platforms.two,platforms.xy2[0],platforms.xy2[1]);
             PS.spriteSolidColor(goal.image, 0xD3C200);
 
-
+	    PS.spriteMove(goal.image,goal.x,goal.y);	 
             PS.statusText("Level 1");
             break;
         case 3:
@@ -360,7 +360,7 @@ function createLevel(){
             PS.spriteMove(platforms.three,platforms.xy3[0],platforms.xy3[1]);
             PS.spriteSolidColor(goal.image, 0xD3C200);
 
-
+	    PS.spriteMove(goal.image,goal.x,goal.y);
             PS.statusText("Level 2");
             break;
         case 4:
@@ -395,7 +395,8 @@ function createLevel(){
             PS.spriteSolidColor(platforms.four,0x11C4FF);
             PS.spriteMove(platforms.four,platforms.xy4[0],platforms.xy4[1]);
             PS.spriteSolidColor(goal.image, 0xD3C200);
-
+		    
+	    PS.spriteMove(goal.image,goal.x,goal.y);
             PS.statusText("Level 3");
             break;
     }
