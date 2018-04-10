@@ -299,7 +299,7 @@ function createLevel(){
 
             PS.spriteSolidColor(platforms.one,0x11C4FF);
             PS.spriteMove(platforms.one,platforms.xy1[0],platforms.xy1[1]);
-            PS.spriteSolidColor(goal.image, 0xD3C200);
+            PS.spriteSolidColor(goal.image, 0xFFD700);
 
             PS.spriteMove(goal.image,goal.x,goal.y);
             break;
@@ -319,14 +319,14 @@ function createLevel(){
             platforms.xy1 = [8,4];
             platforms.xy2 = [1,1];
             goal.x = 9;
-            goal.y = 5;
+            goal.y = 1;
 
 
             PS.spriteSolidColor(platforms.one,0x11C4FF);
             PS.spriteMove(platforms.one,platforms.xy1[0],platforms.xy1[1]);
             PS.spriteSolidColor(platforms.two,0x11C4FF);
             PS.spriteMove(platforms.two,platforms.xy2[0],platforms.xy2[1]);
-            PS.spriteSolidColor(goal.image, 0xD3C200);
+            PS.spriteSolidColor(goal.image, 0xFFD700);
 
 	    PS.spriteMove(goal.image,goal.x,goal.y);	 
             PS.statusText("Level 1");
@@ -358,7 +358,7 @@ function createLevel(){
             PS.spriteMove(platforms.two,platforms.xy2[0],platforms.xy2[1]);
             PS.spriteSolidColor(platforms.three,0x11C4FF);
             PS.spriteMove(platforms.three,platforms.xy3[0],platforms.xy3[1]);
-            PS.spriteSolidColor(goal.image, 0xD3C200);
+            PS.spriteSolidColor(goal.image, 0xFFD700);
 
 	    PS.spriteMove(goal.image,goal.x,goal.y);
             PS.statusText("Level 2");
@@ -394,7 +394,7 @@ function createLevel(){
             PS.spriteMove(platforms.three,platforms.xy3[0],platforms.xy3[1]);
             PS.spriteSolidColor(platforms.four,0x11C4FF);
             PS.spriteMove(platforms.four,platforms.xy4[0],platforms.xy4[1]);
-            PS.spriteSolidColor(goal.image, 0xD3C200);
+            PS.spriteSolidColor(goal.image, 0xFFD700);
 		    
 	    PS.spriteMove(goal.image,goal.x,goal.y);
             PS.statusText("Level 3");
