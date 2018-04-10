@@ -349,7 +349,7 @@ function createLevel(){
             platforms.xy2 = [5,6];
             platforms.xy3 = [6,7];
             goal.x = 7;
-            goal.y = 10;
+            goal.y = 4;
 
 
             PS.spriteSolidColor(platforms.one,0x11C4FF);
@@ -365,8 +365,8 @@ function createLevel(){
             break;
         case 4:
             ball.moves = 10;
-            ball.startX = 5;
-            ball.startY = 10;
+            ball.startX = 6;
+            ball.startY = 6;
             PS.spriteMove(ball.image,ball.startX, ball.startY);
             PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
             ball.x = ball.startX;
