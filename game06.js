@@ -82,10 +82,10 @@ function fixMovement(){
         x3 == ball.x && y3 == ball.y - 1 || x3 + 1 == ball.x  && y3 == ball.y - 1 || x3 + 2 == ball.x  && y3 == ball.y - 1 ||
         x4 == ball.x && y4== ball.y - 1 || x4 + 1 == ball.x  && y4 == ball.y - 1 || x4 + 2 == ball.x  && y4 == ball.y - 1 ||
         //Hitting the platform when their y's are the same but from the side
-        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
-        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
-        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
-        x == ball.x && y == ball.y || x + 1 == ball.x  && y == ball.y || x + 2 == ball.x  && y == ball.y ||
+        x == ball.x - 1 && y == ball.y || x + 1 == ball.x - 1  && y == ball.y || x + 2 == ball.x - 1  && y == ball.y ||
+        x2 == ball.x && y2 == ball.y || x2 + 1 == ball.x  && y2 == ball.y || x2 + 2 == ball.x  && y2 == ball.y ||
+        x3 == ball.x && y3 == ball.y || x3 + 1 == ball.x  && y3 == ball.y || x3 + 2 == ball.x  && y3 == ball.y ||
+        x4 == ball.x && y4 == ball.y || x4 + 1 == ball.x  && y4 == ball.y || x4 + 2 == ball.x  && y4 == ball.y ||
         //Hitting the platform when the balls y is higher
         x == ball.x && y == ball.y + 1 || x + 1 == ball.x  && y == ball.y + 1 || x + 2 == ball.x  && y == ball.y + 1 ||
         x2 == ball.x && y2 == ball.y + 1 || x2 + 1 == ball.x  && y2 == ball.y + 1 || x2 + 2 == ball.x  && y2 == ball.y + 1 ||
