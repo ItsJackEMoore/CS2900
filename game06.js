@@ -305,16 +305,98 @@ function createLevel(){
             break;
         case 2:
             ball.moves = 10;
+            ball.startX = 5;
+            ball.startY = 10;
             PS.spriteMove(ball.image,ball.startX, ball.startY);
             PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
             ball.x = ball.startX;
             ball.y = ball.startY;
-            PS.statusText("Works");
+
+            platforms.one = PS.spriteSolid(3,1);
+            platforms.two = PS.spriteSolid(7,1);
+            goal.image = PS.spriteSolid(1,1);
+
+            platforms.xy1 = [8,4];
+            platforms.xy2 = [1,1];
+            goal.x = 9;
+            goal.y = 5;
+
+
+            PS.spriteSolidColor(platforms.one,0x11C4FF);
+            PS.spriteMove(platforms.one,platforms.xy1[0],platforms.xy1[1]);
+            PS.spriteSolidColor(platforms.two,0x11C4FF);
+            PS.spriteMove(platforms.two,platforms.xy2[0],platforms.xy2[1]);
+            PS.spriteSolidColor(goal.image, 0xD3C200);
+
+
+            PS.statusText("Level 1");
             break;
         case 3:
+            ball.moves = 10;
+            ball.startX = 5;
+            ball.startY = 10;
+            PS.spriteMove(ball.image,ball.startX, ball.startY);
+            PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+            ball.x = ball.startX;
+            ball.y = ball.startY;
 
+            platforms.one = PS.spriteSolid(3,1);
+            platforms.two = PS.spriteSolid(7,1);
+            platforms.three = PS.spriteSolid (1,2);
+            goal.image = PS.spriteSolid(1,1);
+
+            platforms.xy1 = [3,6];
+            platforms.xy2 = [5,6];
+            platforms.xy3 = [6,7];
+            goal.x = 7;
+            goal.y = 10;
+
+
+            PS.spriteSolidColor(platforms.one,0x11C4FF);
+            PS.spriteMove(platforms.one,platforms.xy1[0],platforms.xy1[1]);
+            PS.spriteSolidColor(platforms.two,0x11C4FF);
+            PS.spriteMove(platforms.two,platforms.xy2[0],platforms.xy2[1]);
+            PS.spriteSolidColor(platforms.three,0x11C4FF);
+            PS.spriteMove(platforms.three,platforms.xy3[0],platforms.xy3[1]);
+            PS.spriteSolidColor(goal.image, 0xD3C200);
+
+
+            PS.statusText("Level 2");
             break;
         case 4:
+            ball.moves = 10;
+            ball.startX = 5;
+            ball.startY = 10;
+            PS.spriteMove(ball.image,ball.startX, ball.startY);
+            PS.alpha(ball.x,ball.y,PS.ALPHA_OPAQUE);
+            ball.x = ball.startX;
+            ball.y = ball.startY;
+
+            platforms.one = PS.spriteSolid(1,2);
+            platforms.two = PS.spriteSolid(2,1);
+            platforms.three = PS.spriteSolid (1,2);
+            platforms.four = PS.spriteSolid (2,1);
+            goal.image = PS.spriteSolid(1,1);
+
+            platforms.xy1 = [5,5];
+            platforms.xy2 = [6,7];
+            platforms.xy3 = [8,5];
+            platforms.xy4 = [5,3];
+            goal.x = 7;
+            goal.y = 7;
+
+
+            PS.spriteSolidColor(platforms.one,0x11C4FF);
+            PS.spriteMove(platforms.one,platforms.xy1[0],platforms.xy1[1]);
+            PS.spriteSolidColor(platforms.two,0x11C4FF);
+            PS.spriteMove(platforms.two,platforms.xy2[0],platforms.xy2[1]);
+            PS.spriteSolidColor(platforms.three,0x11C4FF);
+            PS.spriteMove(platforms.three,platforms.xy3[0],platforms.xy3[1]);
+            PS.spriteSolidColor(platforms.four,0x11C4FF);
+            PS.spriteMove(platforms.four,platforms.xy4[0],platforms.xy4[1]);
+            PS.spriteSolidColor(goal.image, 0xD3C200);
+
+            PS.statusText("Level 3");
             break;
     }
 
