@@ -42,9 +42,13 @@ var player={
 };
 
 var timer ={
+    timed : null,
 	count : 0,
 	time: function(){
 		timer.count++;
+		if(timer.count % 1 == 0){
+		    gameOver();
+        }
 		if(timer.count % 4 == 0){
 		    eMove();
         }
@@ -81,7 +85,7 @@ function finalize(){
     PS.gridColor(0x404040);
     PS.statusText("");
     PS.color(player.x,player.y,player.color);
-    PS.timerStart(5,timer.time);
+    timer.timed = PS.timerStart(5,timer.time);
 
     var array = [0,0];
     NPC.location.push(array);
@@ -93,7 +97,7 @@ function finalize(){
 PS.init = function( system, options ) {
     if ( db ) {
         db = PS.dbInit( db, { login : finalize } );
-        if ( db === PS.ERROR ) {s
+        if ( db === PS.ERROR ) {
             db = null;
         }
     }
@@ -162,7 +166,7 @@ function eMove(){
     clean();
     for(i ; i < NPC.location.length; i++){
         var loc = NPC.location[i];
-        if(loc[0] < player.x && loc[0] + 1 != player.x && loc[1] != player.y) {
+        if(loc[0] < player.x && !(loc[0] + 1 == player.x && loc[1] == player.y)){
             if(hittingNPC(loc[0] + 1,loc[1]) == true){
 
             }
@@ -171,7 +175,7 @@ function eMove(){
             }
 
         }
-        if(loc[0] > player.x && loc[0] - 1 != player.x && loc[1] != player.y){
+        if(loc[0] > player.x && !(loc[0] - 1 == player.x && loc[1] == player.y)){
             if(hittingNPC(loc[0] - 1,loc[1]) == true){
 
             }
@@ -181,7 +185,7 @@ function eMove(){
 
 
         }
-        if(loc[1] < player.y && loc[1] +1 != player.y && loc[0] != player.x){
+        if(loc[1] < player.y && !(loc[1] +1 == player.y && loc[0] == player.x)){
             if(hittingNPC(loc[0],loc[1] + 1) == true){
 
             }
@@ -190,7 +194,7 @@ function eMove(){
             }
 
         }
-        if(loc[1] > player.y && loc[1] - 1 != player.y && loc[0] != player.x){
+        if(loc[1] > player.y && !(loc[1] - 1 == player.y && loc[0] == player.x)){
             if(hittingNPC(loc[0],loc[1] - 1) == true){
 
             }
@@ -247,11 +251,18 @@ function createNPC(){
     NPC.location.push(array);
 }
 function gameOver() {
-    if ( db && PS.dbValid( db ) ) {
-        PS.dbEvent( db, "gameover", true );
-        PS.dbSend( db, "bmoriarty", { discard : true } );
-        db = null;
+    if(noMoves() == true){
+        PS.timerStop(timer.timed);
+        if ( db && PS.dbValid( db ) ) {
+            PS.dbEvent( db, "gameover", true );
+            PS.dbSend( db, "bmoriarty", { discard : true } );
+            db = null;
+        }
     }
+    else{
+
+    }
+
 }
 
 function hint(){
@@ -259,5 +270,8 @@ function hint(){
     PS.glyph(13,15,0x61);
     PS.glyph(15,15,0x64);
     PS.glyph(14,15,0x73);
+
+}
+function noMoves(){
 
 }
