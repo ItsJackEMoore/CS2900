@@ -36,25 +36,42 @@ var fade={
 var player={
 	x: 5,
 	y: 5,
-	color : PS.COLOR_BLACK
+	color : PS.COLOR_BLACK,
+    hasMoved : false
 };
 
 var timer ={
 	count : 0,
 	time: function(){
 		timer.count++;
+		if(timer.count % 4 == 0){
+		    eMove();
+        }
 	}
 };
+
+var NPC ={
+    location: new Array(),
+    color: 0xB1B1B1
+};
+
+function finalize(){
+    PS.gridSize( grid.x, grid.y );
+    PS.gridColor(0x404040);
+    PS.statusText("");
+    PS.color(player.x,player.y,player.color);
+    PS.timerStart(5,timer.time);
+
+    var array = [0,0];
+    NPC.location.push(array);
+
+
+}
 
 
 PS.init = function( system, options ) {
 
-	PS.gridSize( grid.x, grid.y );
-	PS.gridColor(0x404040);
-	PS.statusText("");
-	PS.color(player.x,player.y,player.color);
-
-
+    finalize();
 };
 PS.keyDown = function(key,shift,ctrl,option){
 	"use strict";
@@ -106,4 +123,42 @@ PS.keyDown = function(key,shift,ctrl,option){
 
 };
 
+function eMove(){
+    var i = 0;
+    clean();
+    for(i ; i < NPC.location.length; i++){
+        var loc = NPC.location[i];
+        if(loc[0] < player.x) {
+            loc[0] = loc[0] + 1;
+        }
+        if(loc[0] > player.x){
+            loc[0] = loc[0] - 1;
+        }
+        if(loc[1] < player.y){
+            loc[1] = loc[1] + 1;
+        }
+        if(loc[1] > player.y){
+            loc[1] = loc[1] - 1;
+        }
+        NPC.location[i] = loc;
+    }
+
+    redraw();
+}
+
+function clean(){
+    for(var i = 0; i < NPC.location.length; i++){
+        var loc = NPC.location[i];
+        PS.color(loc[0],loc[1],grid.color);
+    }
+
+}
+
+function redraw(){
+    for(var i = 0 ; i < NPC.location.length; i++){
+        var loc = NPC.location[i];
+        PS.color(loc[0],loc[1],NPC.color);
+    }
+
+}
 
