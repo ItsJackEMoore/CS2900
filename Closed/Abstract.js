@@ -37,7 +37,8 @@ var player={
 	x: 5,
 	y: 5,
 	color : PS.COLOR_BLACK,
-    hasMoved : false
+    hasMoved : false,
+    hint : false
 };
 
 var timer ={
@@ -47,11 +48,22 @@ var timer ={
 		if(timer.count % 4 == 0){
 		    eMove();
         }
+        if(timer.count % 20 == 0 && player.hasMoved == false && player.hint == false){
+		    player.hint = true;
+		    hint();
+        }
         if(timer.count % 20 == 0){
             if ( db && PS.dbValid( db ) ) {
                 PS.dbEvent( db, "New NPC Spawned", val ); // val can be anything
             }
 		    createNPC();
+        }
+        if(timer.count % 80 == 0 && player.hint == true){
+            PS.glyph(14,14,0);
+            PS.glyph(13,15,0);
+            PS.glyph(15,15,0);
+            PS.glyph(14,15,0);
+
         }
 
 	}
@@ -95,6 +107,7 @@ PS.keyDown = function(key,shift,ctrl,option){
 	"use strict";
 
 	if(key == PS.KEY_ARROW_LEFT || key == 83 || key == 97){
+        player.hasMoved = true;
 		if(player.x == fade.min || hittingNPC(player.x-1,player.y) == true){
 
 		}
@@ -106,6 +119,7 @@ PS.keyDown = function(key,shift,ctrl,option){
 
     }
     else if(key == PS.KEY_ARROW_DOWN || key == 83 || key == 115){
+        player.hasMoved = true;
 		if(player.y == fade.max ||  hittingNPC(player.x,player.y + 1) == true){
 
 		}
@@ -117,6 +131,7 @@ PS.keyDown = function(key,shift,ctrl,option){
 
     }
     else if(key == PS.KEY_ARROW_RIGHT || key == 68 || key == 100){
+        player.hasMoved = true;
 		if(player.x == fade.max ||  hittingNPC(player.x+1,player.y) == true){
 
 		}
@@ -128,6 +143,7 @@ PS.keyDown = function(key,shift,ctrl,option){
 
     }
     else if(key == PS.KEY_ARROW_UP || key == 87 || key == 119 ){
+        player.hasMoved = true;
 		if(player.y == fade.min ||  hittingNPC(player.x,player.y - 1) == true){
 
 		}
@@ -236,4 +252,12 @@ function gameOver() {
         PS.dbSend( db, "bmoriarty", { discard : true } );
         db = null;
     }
+}
+
+function hint(){
+    PS.glyph(14,14,0x77);
+    PS.glyph(13,15,0x61);
+    PS.glyph(15,15,0x64);
+    PS.glyph(14,15,0x73);
+
 }
