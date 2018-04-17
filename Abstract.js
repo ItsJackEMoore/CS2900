@@ -128,16 +128,16 @@ function eMove(){
     clean();
     for(i ; i < NPC.location.length; i++){
         var loc = NPC.location[i];
-        if(loc[0] < player.x) {
+        if(loc[0] < player.x && loc[0] + 1 != player.x && loc[1] != player.y) {
             loc[0] = loc[0] + 1;
         }
-        if(loc[0] > player.x){
+        if(loc[0] > player.x && loc[0] -1 != player.x && loc[1] != player.y){
             loc[0] = loc[0] - 1;
         }
-        if(loc[1] < player.y){
+        if(loc[1] < player.y && loc[1] +1 != player.y && loc[0] != player.x){
             loc[1] = loc[1] + 1;
         }
-        if(loc[1] > player.y){
+        if(loc[1] > player.y && loc[1] - 1 != player.y && loc[0] != player.x){
             loc[1] = loc[1] - 1;
         }
         NPC.location[i] = loc;
@@ -161,4 +161,5 @@ function redraw(){
     }
 
 }
+
 
