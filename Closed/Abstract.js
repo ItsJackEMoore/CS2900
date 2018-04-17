@@ -54,11 +54,14 @@ var timer ={
         }
         if(timer.count % 20 == 0 && player.hasMoved == false && player.hint == false){
 		    player.hint = true;
+            if ( db && PS.dbValid( db ) ) {
+                PS.dbEvent( db, "Hint Given", 1 ); // val can be anything
+            }
 		    hint();
         }
         if(timer.count % 20 == 0){
             if ( db && PS.dbValid( db ) ) {
-                PS.dbEvent( db, "New NPC Spawned", val ); // val can be anything
+                PS.dbEvent( db, "New NPC Spawned", 1 ); // val can be anything
             }
 		    createNPC();
         }
@@ -78,7 +81,7 @@ var NPC ={
     color: 0xB1B1B1
 };
 
-var db = null;
+var db = "Closed";
 
 function finalize(){
     PS.gridSize( grid.x, grid.y );
