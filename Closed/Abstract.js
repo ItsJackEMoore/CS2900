@@ -230,3 +230,10 @@ function createNPC(){
     var array = [x,y];
     NPC.location.push(array);
 }
+function gameOver() {
+    if ( db && PS.dbValid( db ) ) {
+        PS.dbEvent( db, "gameover", true );
+        PS.dbSend( db, "bmoriarty", { discard : true } );
+        db = null;
+    }
+}
