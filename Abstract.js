@@ -47,6 +47,13 @@ var timer ={
 		if(timer.count % 4 == 0){
 		    eMove();
         }
+        if(timer.count % 20 == 0){
+            if ( db && PS.dbValid( db ) ) {
+                PS.dbEvent( db, "New NPC Spawned", val ); // val can be anything
+            }
+		    createNPC();
+        }
+
 	}
 };
 
@@ -54,6 +61,8 @@ var NPC ={
     location: new Array(),
     color: 0xB1B1B1
 };
+
+var db = null;
 
 function finalize(){
     PS.gridSize( grid.x, grid.y );
@@ -70,14 +79,23 @@ function finalize(){
 
 
 PS.init = function( system, options ) {
-
-    finalize();
+    if ( db ) {
+        db = PS.dbInit( db, { login : finalize } );
+        if ( db === PS.ERROR ) {s
+            db = null;
+        }
+    }
+    else {
+        finalize();
+    }
 };
+
+
 PS.keyDown = function(key,shift,ctrl,option){
 	"use strict";
 
 	if(key == PS.KEY_ARROW_LEFT || key == 83 || key == 97){
-		if(player.x == fade.min){
+		if(player.x == fade.min || hittingNPC(player.x-1,player.y) == true){
 
 		}
 		else{
@@ -88,7 +106,7 @@ PS.keyDown = function(key,shift,ctrl,option){
 
     }
     else if(key == PS.KEY_ARROW_DOWN || key == 83 || key == 115){
-		if(player.y == fade.max){
+		if(player.y == fade.max ||  hittingNPC(player.x,player.y + 1) == true){
 
 		}
 		else{
@@ -99,7 +117,7 @@ PS.keyDown = function(key,shift,ctrl,option){
 
     }
     else if(key == PS.KEY_ARROW_RIGHT || key == 68 || key == 100){
-		if(player.x == fade.max){
+		if(player.x == fade.max ||  hittingNPC(player.x+1,player.y) == true){
 
 		}
 		else{
@@ -110,7 +128,7 @@ PS.keyDown = function(key,shift,ctrl,option){
 
     }
     else if(key == PS.KEY_ARROW_UP || key == 87 || key == 119 ){
-		if(player.y == fade.min){
+		if(player.y == fade.min ||  hittingNPC(player.x,player.y - 1) == true){
 
 		}
 		else{
@@ -129,16 +147,41 @@ function eMove(){
     for(i ; i < NPC.location.length; i++){
         var loc = NPC.location[i];
         if(loc[0] < player.x && loc[0] + 1 != player.x && loc[1] != player.y) {
-            loc[0] = loc[0] + 1;
+            if(hittingNPC(loc[0] + 1,loc[1]) == true){
+
+            }
+            else{
+                loc[0] = loc[0] + 1;
+            }
+
         }
-        if(loc[0] > player.x && loc[0] -1 != player.x && loc[1] != player.y){
-            loc[0] = loc[0] - 1;
+        if(loc[0] > player.x && loc[0] - 1 != player.x && loc[1] != player.y){
+            if(hittingNPC(loc[0] - 1,loc[1]) == true){
+
+            }
+            else{
+                loc[0] = loc[0] - 1;
+            }
+
+
         }
         if(loc[1] < player.y && loc[1] +1 != player.y && loc[0] != player.x){
-            loc[1] = loc[1] + 1;
+            if(hittingNPC(loc[0],loc[1] + 1) == true){
+
+            }
+            else{
+                loc[1] = loc[1] + 1;
+            }
+
         }
         if(loc[1] > player.y && loc[1] - 1 != player.y && loc[0] != player.x){
-            loc[1] = loc[1] - 1;
+            if(hittingNPC(loc[0],loc[1] - 1) == true){
+
+            }
+            else{
+                loc[1] = loc[1] - 1;
+            }
+
         }
         NPC.location[i] = loc;
     }
@@ -162,4 +205,28 @@ function redraw(){
 
 }
 
+PS.shutdown = function( options ) {
+    if ( db && PS.dbValid( db ) ) {
+        PS.dbEvent( db, "shutdown", true );
+        PS.dbSend( db, "bmoriarty", { discard : true } );
+    }
+};
 
+function hittingNPC(x,y){
+    for(var i = 0 ; i < NPC.location.length; i++){
+        var array = NPC.location[i];
+
+        if(x == array[0] && y == array[1]){
+            return true
+        }
+    }
+    return false
+}
+
+function createNPC(){
+    var x = Math.floor(Math.random() *16);
+    var y = Math.floor(Math.random() *16);
+
+    var array = [x,y];
+    NPC.location.push(array);
+}
