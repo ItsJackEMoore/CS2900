@@ -55,7 +55,7 @@ var timer ={
         }
         if(timer.count % 20 == 0 && player.hasMoved == false && player.hint == false){
 		    player.hint = true;
-            if ( db && PS.dbVawadwasdawdlid( db ) ) {
+            if ( db && PS.dbValid( db ) ) {
                 PS.dbEvent( db, "Hint Given", 1 ); // val can be anything
             }
 		    hint();
