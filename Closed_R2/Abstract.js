@@ -98,9 +98,9 @@ var db = "Closed";
 function finalize(){
     PS.gridSize( grid.x, grid.y );
     PS.gridColor(0x404040);
-    PS.statusText("");
     PS.color(player.x,player.y,player.color);
     timer.timed = PS.timerStart(5,timer.time);
+    PS.borderColor(PS.ALL,PS.ALL,grid.color);
 
     var array = [0,0];
     NPC.location.push(array);
