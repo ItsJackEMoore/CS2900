@@ -8,18 +8,6 @@
 /*jslint nomen: true, white: true */
 /*global PS */
 
-/*
-This is a template for creating new Perlenspiel games.
-All event-handling functions are commented out by default.
-Uncomment and add code to the event handlers required by your project.
-*/
-
-/*
-PS.init( system, options )
-Called once after engine is initialized but before event-polling begins.
-[system] = an object containing engine and platform information; see API documentation for details.
-[options] = an object with optional parameters; see API documentation for details.
-*/
 
 // Uncomment the following BLOCK to expose PS.init() event handler:
 var gameOn = true;
@@ -51,6 +39,7 @@ var timer ={
 		timer.count++;
 		if(timer.count % 4 == 0){
 		    eMove();
+		    playSound(2);
 
         }
         if(timer.count % 20 == 0 && player.hasMoved == false && player.hint == false){
@@ -65,6 +54,7 @@ var timer ={
                 PS.dbEvent( db, "New NPC Spawned", 1 ); // val can be anything
             }
 		    createNPC();
+            playSound(1);
 
             PS.statusColor(0x404040);
         }
@@ -93,7 +83,7 @@ var NPC ={
     color: 0xB1B1B1
 };
 
-var db = "Closed";
+var db = "Black Sheep";
 
 function finalize(){
     PS.gridSize( grid.x, grid.y );
@@ -103,15 +93,22 @@ function finalize(){
     PS.borderColor(PS.ALL,PS.ALL,grid.color);
 
     var array = [0,0];
-    NPC.location.push(array);
-    PS.statusText("Closed");
+    NPC.location.push(array)
+    PS.statusColor(grid.color);
+    PS.statusText("Black Sheep");
     PS.statusFade(20);
+
+    PS.audioLoad("start",{path: "Sounds/"});
+    PS.audioLoad("end",{path: "Sounds/"});
+    PS.audioPlay("start",{path: "Sounds/"});
+
 
 
 }
 
 
 PS.init = function( system, options ) {
+    "use strict";
     if ( db ) {
         db = PS.dbInit( db, { login : finalize } );
         if ( db === PS.ERROR ) {
@@ -290,8 +287,59 @@ function hint(){
 
 }
 function endGame(){
+    PS.audioStop("start",{path: "Sounds/"});
+    PS.audioPlay("end",{path: "Sounds/"});
     gameOn = false;
     PS.fade(PS.ALL,PS.ALL,20);
-    PS.statusColor(PS.COLOR_BLACK);
+    PS.statusColor(PS.COLOR_WHITE);
     PS.color(PS.ALL,PS.ALL,NPC.color);
+}
+
+function playSound(x){
+    switch(x){
+        case 1:
+            var y = Math.floor(Math.random() * 4);
+            switch(y){
+                case 0:
+                    PS.audioLoad("spawn1",{path: "Sounds/"});
+                    PS.audioPlay("spawn1",{path: "Sounds/"});
+                    break;
+                case 1:
+                    PS.audioLoad("spawn2",{path: "Sounds/"});
+                    PS.audioPlay("spawn2",{path: "Sounds/"});
+                    break;
+                case 2:
+                    PS.audioLoad("spawn3",{path: "Sounds/"});
+                    PS.audioPlay("spawn3",{path: "Sounds/"});
+                    break;
+                case 3:
+                    PS.audioLoad("spawn4",{path: "Sounds/"});
+                    PS.audioPlay("spawn4",{path: "Sounds/"});
+                    break;
+
+            }
+            break;
+        case 2:
+            var y = Math.floor(Math.random() * 4);
+            switch(y){
+                case 0:
+                    PS.audioLoad("beep1",{path: "Sounds/"});
+                    PS.audioPlay("beep1",{path: "Sounds/",volume: 0.10});
+                    break;
+                case 1:
+                    PS.audioLoad("beep2",{path: "Sounds/"});
+                    PS.audioPlay("beep2",{path: "Sounds/",volume: 0.10});
+                    break;
+                case 2:
+                    PS.audioLoad("beep3",{path: "Sounds/"});
+                    PS.audioPlay("beep3",{path: "Sounds/",volume: 0.10});
+                    break;
+                case 3:
+                    PS.audioLoad("beep4",{path: "Sounds/"});
+                    PS.audioPlay("beep4",{path: "Sounds/",volume: 0.10});
+                    break;
+
+            }
+
+    }
 }
