@@ -38,8 +38,7 @@ var timer ={
 	time: function(){
 		timer.count++;
 		if(timer.count % 4 == 0){
-		    eMove();
-		    playSound(2);
+		    eMove();		    
 
         }
         if(timer.count % 20 == 0 && player.hasMoved == false && player.hint == false){
@@ -174,8 +173,9 @@ if(gameOn == true){
     }
 
 }
-
-
+	
+playSound(2);
+	
 };
 
 function eMove(){
