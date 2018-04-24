@@ -132,6 +132,7 @@ if(gameOn == true){
             PS.color(player.x,player.y,grid.color);
             player.x = player.x - 1;
             PS.color(player.x,player.y,player.color);
+	    playSound(2);
         }
 
     }
@@ -144,6 +145,7 @@ if(gameOn == true){
             PS.color(player.x,player.y,grid.color);
             player.y = player.y + 1;
             PS.color(player.x,player.y,player.color);
+	    playSound(2);
         }
 
     }
@@ -156,6 +158,7 @@ if(gameOn == true){
             PS.color(player.x,player.y,grid.color);
             player.x = player.x + 1;
             PS.color(player.x,player.y,player.color);
+	    playSound(2);
         }
 
     }
@@ -168,13 +171,12 @@ if(gameOn == true){
             PS.color(player.x,player.y,grid.color);
             player.y = player.y - 1;
             PS.color(player.x,player.y,player.color);
+	    playSound(2);
         }
 
     }
 
 }
-	
-playSound(2);
 	
 };
 
