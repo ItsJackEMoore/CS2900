@@ -82,7 +82,7 @@ var NPC ={
     color: 0xB1B1B1
 };
 
-var db = null;
+var db = "Black Sheep";
 
 function finalize(){
     PS.gridSize( grid.x, grid.y );
