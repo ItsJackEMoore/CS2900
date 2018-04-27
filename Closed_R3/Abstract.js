@@ -97,9 +97,9 @@ function finalize(){
     PS.statusText("Black Sheep");
     PS.statusFade(20);
 
-    PS.audioLoad("start",{path: "Sounds/",loop:true});
+    PS.audioLoad("start",{path: "Sounds/"});
     PS.audioLoad("end",{path: "Sounds/"});
-    PS.audioPlay("start",{path: "Sounds/"});
+    PS.audioPlay("start",{path: "Sounds/",loop:true});
 
 
 
