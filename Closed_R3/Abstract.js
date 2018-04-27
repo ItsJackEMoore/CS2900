@@ -97,7 +97,7 @@ function finalize(){
     PS.statusText("Black Sheep");
     PS.statusFade(20);
 
-    PS.audioLoad("start",{path: "Sounds/",channel: "1"});
+    PS.audioLoad("start",{path: "Sounds/",loop:true});
     PS.audioLoad("end",{path: "Sounds/"});
     PS.audioPlay("start",{path: "Sounds/"});
 
@@ -289,7 +289,6 @@ function hint(){
 
 }
 function endGame(){
-    PS.audioStop("1");
     gameOn = false;
     PS.fade(PS.ALL,PS.ALL,20);
     PS.statusColor(PS.COLOR_WHITE);
