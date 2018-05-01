@@ -294,6 +294,8 @@ function endGame(){
     PS.fade(PS.ALL,PS.ALL,20);
     PS.statusColor(PS.COLOR_WHITE);
     PS.color(PS.ALL,PS.ALL,NPC.color);
+    PS.borderFade(PS.ALL,PS.ALL,20);
+    PS.borderColor(PS.ALL, PS.ALL, NPC.color);
 }
 
 function playSound(x){
