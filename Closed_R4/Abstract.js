@@ -43,15 +43,15 @@ var timer ={
         }
         if(timer.count % 20 == 0 && player.hasMoved == false && player.hint == false){
 		    player.hint = true;
-            if ( db && PS.dbValid( db ) ) {
+            /*if ( db && PS.dbValid( db ) ) {
                 PS.dbEvent( db, "Hint Given", 1 ); // val can be anything
-            }
+            }*/
 		    hint();
         }
         if(timer.count % 20 == 0){
-            if ( db && PS.dbValid( db ) ) {
+           /* if ( db && PS.dbValid( db ) ) {
                 PS.dbEvent( db, "New NPC Spawned", 1 ); // val can be anything
-            }
+            } */
 		    createNPC();
             playSound(1);
 
@@ -109,16 +109,16 @@ function finalize(){
 
 PS.init = function( system, options ) {
     "use strict";
-    if ( db ) {
+    /*if ( db ) {
         db = PS.dbInit( db, { login : finalize } );
         if ( db === PS.ERROR ) {
             db = null;
         }
     }
-    else {
+    else {*/
         finalize();
-    }
-};
+    };
+
 
 
 PS.keyDown = function(key,shift,ctrl,option){
@@ -245,12 +245,12 @@ function redraw(){
 
 }
 
-PS.shutdown = function( options ) {
+/*PS.shutdown = function( options ) {
     if ( db && PS.dbValid( db ) ) {
         PS.dbEvent( db, "shutdown", true );
         PS.dbSend( db, "bmoriarty", { discard : true } );
     }
-};
+};*/
 
 function hittingNPC(x,y){
     for(var i = 0 ; i < NPC.location.length; i++){
@@ -273,11 +273,11 @@ function createNPC(){
 function gameOver() {
     PS.timerStop(timer.timed);
     endGame();
-    if ( db && PS.dbValid( db ) ) {
+    /*if ( db && PS.dbValid( db ) ) {
         PS.dbEvent( db, "gameover", true );
-            PS.dbSend( db, "bmoriarty", { discard : true } );
+            //PS.dbSend( db, "bmoriarty", { discard : true } );
             db = null;
-    }
+    }*/
 
 
 }
